@@ -9,6 +9,6 @@ build() {
 }
 
 upac_install() {
-    mkdir -p "${1}/usr/bin" "${1}/bin"
-    install -m 755 wand2c "${1}/usr/bin/"
+    mkdir -p /usr/bin
+    install -m 755 target/release/wand2c /usr/bin/
 }

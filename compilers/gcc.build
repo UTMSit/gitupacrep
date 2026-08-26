@@ -16,9 +16,9 @@ build() {
         --with-system-zlib \
         --with-native-system-header-dir=/usr/include
     make -j${UPAC_JOBS:-4}
+    cd -
 }
 
 upac_install() {
-    cd build
-    make DESTDIR="${1}" install
+    make -C build install
 }

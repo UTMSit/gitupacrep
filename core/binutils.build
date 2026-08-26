@@ -19,9 +19,9 @@ build() {
         MAKEINFO=true
     make -j1
     make -j${UPAC_JOBS:-4}
+    cd -
 }
 
 upac_install() {
-    cd build
-    make DESTDIR="${1}" install
+    make -C build install
 }

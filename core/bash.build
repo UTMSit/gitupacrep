@@ -10,5 +10,5 @@ build() {
 }
 
 upac_install() {
-    make DESTDIR="${1}" install
+    make install
 }

@@ -9,6 +9,6 @@ build() {
 }
 
 upac_install() {
-    mkdir -p "${1}/usr/bin" "${1}/var/lib/upac" "${1}/var/cache/upac" "${1}/etc/upac/local" "${1}/var/lib/upac/files"
-    install -m 755 upac "${1}/usr/bin/"
+    mkdir -p /usr/bin /var/lib/upac /var/cache/upac /etc/upac/local /var/lib/upac/files
+    install -m 755 upac /usr/bin/
 }

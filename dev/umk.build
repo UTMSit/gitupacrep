@@ -5,10 +5,10 @@ URL=https://github.com/user12msd4c/umk/archive/refs/heads/main.zip
 DEPENDS=""
 
 build() {
-    umk build -j${UPAC_JOBS:-4}    
+    umk build -j${UPAC_JOBS:-4}
 }
 
 upac_install() {
-    mkdir -p "${1}/usr/bin"
-    install -m 755 umk "${1}/usr/bin/"
+    mkdir -p /usr/bin
+    install -m 755 umk /usr/bin/
 }
