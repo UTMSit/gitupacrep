@@ -1,0 +1,14 @@
+NAME=links
+VERSION=2.29
+REVISION=1
+URL=http://links.twibright.com/download/links-${VERSION}.tar.bz2
+DEPENDS="openssl zlib"
+
+build() {
+    ./configure --prefix=/usr --with-ssl --with-zlib --disable-graphics
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}
