@@ -1,0 +1,14 @@
+NAME=upac
+VERSION=1.0.0
+REVISION=1
+URL=https://github.com/UTMSit/upac/archive/refs/heads/main.tar.gz
+DEPENDS=""
+
+build() {
+    gcc -O2 -Wall -Wextra -std=c11 -o upac main.c db.c repo.c build.c install.c remove.c search.c
+}
+
+upac_install() {
+    mkdir -p "${1}/usr/bin" "${1}/var/lib/upac" "${1}/var/cache/upac" "${1}/etc/upac/local" "${1}/var/lib/upac/files"
+    install -m 755 upac "${1}/usr/bin/"
+}
