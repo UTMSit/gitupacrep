@@ -6,14 +6,15 @@ DEPENDS="gmp mpfr mpc isl"
 
 build() {
     mkdir -p build && cd build
+    CC=gcc CXX=g++ \
+    CFLAGS="-std=gnu17 -O2" CXXFLAGS="-std=gnu++17 -O2" \
     ../configure \
         --prefix=/usr \
         --enable-languages=c,c++ \
         --disable-multilib \
         --disable-bootstrap \
         --with-system-zlib \
-        CC="gcc -std=gnu17" \
-        CXX="g++ -std=gnu++17"
+        --with-native-system-header-dir=/usr/include
     make -j${UPAC_JOBS:-4}
 }
 
