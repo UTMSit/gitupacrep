@@ -1,0 +1,14 @@
+NAME=git
+VERSION=2.45.1
+REVISION=1
+URL=https://mirrors.edge.kernel.org/pub/software/scm/git/git-${VERSION}.tar.xz
+DEPENDS="curl openssl zlib"
+
+build() {
+    ./configure --prefix=/usr --with-curl
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

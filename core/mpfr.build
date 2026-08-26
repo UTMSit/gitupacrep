@@ -1,0 +1,14 @@
+NAME=mpfr
+VERSION=4.2.1
+REVISION=1
+URL=https://ftp.gnu.org/gnu/mpfr/mpfr-${VERSION}.tar.xz
+DEPENDS="gmp"
+
+build() {
+    ./configure --prefix=/usr
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

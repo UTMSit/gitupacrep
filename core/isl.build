@@ -1,0 +1,14 @@
+NAME=isl
+VERSION=0.26
+REVISION=1
+URL=https://libisl.sourceforge.io/isl-${VERSION}.tar.xz
+DEPENDS="gmp"
+
+build() {
+    ./configure --prefix=/usr
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

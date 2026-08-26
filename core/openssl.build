@@ -1,0 +1,14 @@
+NAME=openssl
+VERSION=3.2.1
+REVISION=1
+URL=https://www.openssl.org/source/openssl-${VERSION}.tar.gz
+DEPENDS=""
+
+build() {
+    ./config --prefix=/usr --openssldir=/etc/ssl shared
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install_sw
+}

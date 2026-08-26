@@ -1,0 +1,14 @@
+NAME=bash
+VERSION=5.2.21
+REVISION=1
+URL=https://ftp.gnu.org/gnu/bash/bash-${VERSION}.tar.gz
+DEPENDS=""
+
+build() {
+    ./configure --prefix=/usr
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

@@ -1,0 +1,14 @@
+NAME=curl
+VERSION=8.7.1
+REVISION=1
+URL=https://curl.se/download/curl-${VERSION}.tar.xz
+DEPENDS="openssl zlib"
+
+build() {
+    ./configure --prefix=/usr --with-openssl
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}
