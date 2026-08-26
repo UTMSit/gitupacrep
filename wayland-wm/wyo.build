@@ -9,6 +9,5 @@ build() {
 }
 
 upac_install() {
-    mkdir -p "${1}/usr/bin"
-    install -m 755 umk "${1}/usr/bin/"
+    umk install
 }
