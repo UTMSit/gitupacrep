@@ -1,0 +1,14 @@
+NAME="sudo"
+VERSION="1.9.15p5"
+REVISION=1
+URL="https://www.sudo.ws/dist/sudo-${VERSION}.tar.gz"
+DEPENDS="zlib"
+
+build() {
+    ./configure --prefix=/usr --with-all-insults
+    make -j $UPAC_JOBS
+}
+
+upac_install() {
+    DESTDIR="$1" make install
+}
