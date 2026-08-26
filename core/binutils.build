@@ -1,14 +1,22 @@
 NAME=binutils
-VERSION=2.42
+VERSION=2.44
 REVISION=1
 URL=https://ftp.gnu.org/gnu/binutils/binutils-${VERSION}.tar.xz
 DEPENDS=""
 
 build() {
-    ./configure --prefix=/usr --disable-werror --disable-gprofng
+    mkdir -p build && cd build
+    ../configure \
+        --prefix=/usr \
+        --disable-werror \
+        --disable-gprofng \
+        --enable-deterministic-archives \
+        --enable-64-bit-bfd \
+        --with-system-zlib
     make -j${UPAC_JOBS:-4}
 }
 
 upac_install() {
+    cd build
     make DESTDIR="${1}" install
 }
