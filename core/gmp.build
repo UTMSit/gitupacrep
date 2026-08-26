@@ -5,7 +5,7 @@ URL=https://ftp.gnu.org/gnu/gmp/gmp-${VERSION}.tar.xz
 DEPENDS=""
 
 build() {
-    ./configure --prefix=/usr
+    ./configure --prefix=/usr CC="gcc -std=gnu17"
     make -j${UPAC_JOBS:-4}
 }
 
