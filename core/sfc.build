@@ -11,17 +11,17 @@ build() {
     ln -sf ls vdir
     ln -sf touch mk
     ln -sf id whoami
+    cd -
 }
 
 upac_install() {
-    mkdir -p "${1}/usr/bin" "${1}/bin"
-
-    cd target/release
-    for bin in *; do
-        if [ -f "$bin" ] || [ -L "$bin" ]; then
-            install -m 755 "$bin" "${1}/usr/bin/" 2>/dev/null || cp -P "$bin" "${1}/usr/bin/"
+    for bin in target/release/*; do
+        name=$(basename "$bin")
+        if [ -L "$bin" ]; then
+            cp -P "$bin" "/bin/$name"
+        elif [ -f "$bin" ] && [ -x "$bin" ]; then
+            install -m 755 "$bin" "/bin/$name"
         fi
     done
-
-    ln -sf ../usr/bin/sfsh "${1}/bin/sh"
+    ln -sf /bin/sfsh /bin/sh
 }
