@@ -1,0 +1,27 @@
+NAME=binutils
+VERSION=latest
+REVISION=1
+URL=https://ftp.gnu.org/gnu/binutils/binutils-${VERSION}.tar.bz2
+DEPENDS=""
+
+build() {
+    rm -rf build
+    mkdir -p build && cd build
+    export CFLAGS="-O0 -fno-builtin -std=gnu11"
+    export CXXFLAGS="-O0 -fno-builtin -std=gnu++14"
+    ../configure \
+        --prefix=/usr \
+        --disable-werror \
+        --disable-gprofng \
+        --enable-deterministic-archives \
+        --enable-64-bit-bfd \
+        --with-system-zlib \
+        MAKEINFO=true
+    make -j1
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    cd build
+    make DESTDIR="${1}" install
+}
