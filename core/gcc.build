@@ -1,5 +1,5 @@
 NAME=gcc
-VERSION=latest
+VERSION=15.1.0
 REVISION=1
 URL=https://ftp.gnu.org/gnu/gcc/gcc-${VERSION}/gcc-${VERSION}.tar.xz
 DEPENDS="gmp mpfr mpc isl"
@@ -11,7 +11,9 @@ build() {
         --enable-languages=c,c++ \
         --disable-multilib \
         --disable-bootstrap \
-        --with-system-zlib
+        --with-system-zlib \
+        CC="gcc -std=gnu17" \
+        CXX="g++ -std=gnu++17"
     make -j${UPAC_JOBS:-4}
 }
 
