@@ -1,0 +1,19 @@
+NAME=wpa_supplicant
+VERSION=2.11
+REVISION=1
+URL=https://w1.fi/releases/wpa_supplicant-${VERSION}.tar.gz
+DEPENDS="openssl dbus"
+
+build() {
+    cd wpa_supplicant
+    cp defconfig .config
+    echo "CONFIG_DBUS=y" >> .config
+    echo "CONFIG_CTRL_IFACE_DBUS_NEW=y" >> .config
+    echo "CONFIG_CTRL_IFACE_DBUS_INTRO=y" >> .config
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    cd wpa_supplicant
+    make DESTDIR="${1}" install
+}

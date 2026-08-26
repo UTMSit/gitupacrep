@@ -1,0 +1,14 @@
+NAME=ninja
+VERSION=1.12.1
+REVISION=1
+URL=https://github.com/ninja-build/ninja/archive/refs/tags/v${VERSION}.tar.gz
+DEPENDS="python"
+
+build() {
+    python3 configure.py --bootstrap
+}
+
+upac_install() {
+    mkdir -p "${1}/usr/bin"
+    install -m 755 ninja "${1}/usr/bin/"
+}

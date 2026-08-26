@@ -1,0 +1,19 @@
+NAME=eudev
+VERSION=3.2.14
+REVISION=1
+URL=https://github.com/eudev-project/eudev/releases/download/v${VERSION}/eudev-${VERSION}.tar.gz
+DEPENDS="gperf"
+
+build() {
+    ./configure \
+        --prefix=/usr \
+        --sysconfdir=/etc \
+        --libdir=/usr/lib \
+        --disable-manpages \
+        --disable-kmod
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

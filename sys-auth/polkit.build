@@ -1,0 +1,22 @@
+NAME=polkit
+VERSION=125
+REVISION=1
+URL=https://gitlab.freedesktop.org/polkit/polkit/-/archive/${VERSION}/polkit-${VERSION}.tar.bz2
+DEPENDS="glib expat"
+
+build() {
+    mkdir build && cd build
+    meson setup .. \
+        --prefix=/usr \
+        --buildtype=release \
+        -Dpam=false \
+        -Dsystemdsystemunitdir=no \
+        -Dtests=false \
+        -Dman=false
+    ninja
+}
+
+upac_install() {
+    cd build
+    DESTDIR="${1}" ninja install
+}

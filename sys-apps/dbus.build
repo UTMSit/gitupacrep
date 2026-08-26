@@ -1,0 +1,21 @@
+NAME=dbus
+VERSION=1.14.10
+REVISION=1
+URL=https://dbus.freedesktop.org/releases/dbus/dbus-${VERSION}.tar.xz
+DEPENDS="expat"
+
+build() {
+    ./configure \
+        --prefix=/usr \
+        --sysconfdir=/etc \
+        --localstatedir=/var \
+        --disable-systemd \
+        --disable-xml-docs \
+        --disable-doxygen-docs \
+        --disable-tests
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

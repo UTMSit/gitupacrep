@@ -1,0 +1,14 @@
+NAME=python
+VERSION=3.12.7
+REVISION=1
+URL=https://www.python.org/ftp/python/${VERSION}/Python-${VERSION}.tar.xz
+DEPENDS="zlib openssl"
+
+build() {
+    ./configure --prefix=/usr --with-ensurepip=no
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

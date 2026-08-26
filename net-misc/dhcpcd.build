@@ -1,0 +1,19 @@
+NAME=dhcpcd
+VERSION=10.1.0
+REVISION=1
+URL=https://roy.marples.name/downloads/dhcpcd/dhcpcd-${VERSION}.tar.xz
+DEPENDS=""
+
+build() {
+    ./configure \
+        --prefix=/usr \
+        --sysconfdir=/etc \
+        --libexecdir=/usr/lib/dhcpcd \
+        --dbdir=/var/lib/dhcpcd \
+        --rundir=/run/dhcpcd
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

@@ -1,0 +1,23 @@
+NAME=glib
+VERSION=2.82.2
+REVISION=1
+URL=https://download.gnome.org/sources/glib/2.82/glib-${VERSION}.tar.xz
+DEPENDS="zlib"
+
+build() {
+    mkdir build && cd build
+    meson setup .. \
+        --prefix=/usr \
+        --buildtype=release \
+        -Dselinux=disabled \
+        -Dxattr=false \
+        -Dlibmount=disabled \
+        -Dman=false \
+        -Dtests=false
+    ninja
+}
+
+upac_install() {
+    cd build
+    DESTDIR="${1}" ninja install
+}

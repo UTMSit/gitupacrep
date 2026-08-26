@@ -1,0 +1,31 @@
+NAME=networkmanager
+VERSION=1.50.0
+REVISION=1
+URL=https://download.gnome.org/sources/NetworkManager/1.50/NetworkManager-${VERSION}.tar.xz
+DEPENDS="glib dbus libnl eudev polkit dhcpcd wpa_supplicant curl openssl"
+
+build() {
+    mkdir build && cd build
+    meson setup .. \
+        --prefix=/usr \
+        --sysconfdir=/etc \
+        --localstatedir=/var \
+        --buildtype=release \
+        -Dsystemd_journal=false \
+        -Dselinux=false \
+        -Dsystemdsystemunitdir=no \
+        -Dpolkit=true \
+        -Dsession_tracking=elogind \
+        -Dmodem_manager=false \
+        -Dovs=false \
+        -Dqt=false \
+        -Dvapi=false \
+        -Ddocs=false \
+        -Dtests=no
+    ninja
+}
+
+upac_install() {
+    cd build
+    DESTDIR="${1}" ninja install
+}

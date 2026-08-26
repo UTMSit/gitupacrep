@@ -26,13 +26,13 @@ build() {
 
 upac_install() {
     REAL_VERSION=$(cat .linux_version 2>/dev/null || echo "latest")
-    echo "[linux] Installing kernel sources to ${1}/usr/src/linux-${REAL_VERSION}"
+    echo "[linux] Installing kernel sources to /usr/src/linux-${REAL_VERSION}"
 
-    mkdir -p "${1}/usr/src"
+    mkdir -p "/usr/src"
 
     # Find the extracted directory (matches linux-* but not the .tar.xz file)
     SRC_DIR=$(ls -d linux-* | grep -v tar.xz | head -1)
 
-    cp -r "${SRC_DIR}" "${1}/usr/src/linux-${REAL_VERSION}"
-    ln -sf "linux-${REAL_VERSION}" "${1}/usr/src/linux"
+    cp -r "${SRC_DIR}" "/usr/src/linux-${REAL_VERSION}"
+    ln -sf "linux-${REAL_VERSION}" "/usr/src/linux"
 }

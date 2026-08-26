@@ -1,0 +1,16 @@
+NAME=libnl
+VERSION=3.11.0
+REVISION=1
+URL=https://github.com/thom311/libnl/releases/download/libnl3_11_0/libnl-${VERSION}.tar.gz
+DEPENDS=""
+
+build() {
+    ./configure \
+        --prefix=/usr \
+        --disable-static
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}
