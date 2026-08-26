@@ -1,0 +1,14 @@
+NAME="nvi"
+VERSION="1.81.6"
+REVISION=1
+URL="https://deb.debian.org/debian/pool/main/n/nvi/nvi_${VERSION}.orig.tar.gz"
+
+build() {
+    cd dist
+    ./configure --prefix=/usr
+    make -j $UPAC_JOBS
+}
+
+upac_install() {
+    DESTDIR="$1" make -C dist install
+}

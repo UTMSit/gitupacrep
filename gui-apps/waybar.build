@@ -1,0 +1,14 @@
+NAME="waybar"
+VERSION="0.10.4"
+REVISION=1
+URL="https://github.com/Alexays/Waybar/archive/refs/tags/v${VERSION}.tar.gz"
+DEPENDS="gtkmm3 jsoncpp"
+
+build() {
+    meson setup build --prefix=/usr
+    ninja -C build -j $UPAC_JOBS
+}
+
+upac_install() {
+    DESTDIR="$1" ninja -C build install
+}

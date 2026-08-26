@@ -1,0 +1,14 @@
+NAME="gnome-shell"
+VERSION="46.4"
+REVISION=1
+URL="https://download.gnome.org/sources/gnome-shell/46/gnome-shell-${VERSION}.tar.xz"
+DEPENDS="gjs mutter"
+
+build() {
+    meson setup build --prefix=/usr
+    ninja -C build -j $UPAC_JOBS
+}
+
+upac_install() {
+    DESTDIR="$1" ninja -C build install
+}

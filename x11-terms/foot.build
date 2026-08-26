@@ -1,0 +1,14 @@
+NAME="foot"
+VERSION="latest"
+REVISION=1
+URL="https://codeberg.org/dnkl/foot/archive/${VERSION}.tar.gz"
+DEPENDS="wayland fcft"
+
+build() {
+    meson setup build --prefix=/usr
+    ninja -C build -j $UPAC_JOBS
+}
+
+upac_install() {
+    DESTDIR="$1" ninja -C build install
+}

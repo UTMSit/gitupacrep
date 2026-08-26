@@ -1,0 +1,14 @@
+NAME="sway"
+VERSION="latest"
+REVISION=1
+URL="https://github.com/swaywm/sway/releases/download/v${VERSION}/sway-${VERSION}.tar.gz"
+DEPENDS="wayland wlroots pcre"
+
+build() {
+    meson setup build --prefix=/usr
+    ninja -C build -j $UPAC_JOBS
+}
+
+upac_install() {
+    DESTDIR="$1" ninja -C build install
+}

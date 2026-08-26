@@ -1,0 +1,14 @@
+NAME="xorg-server"
+VERSION="21.1.13"
+REVISION=1
+URL="https://www.x.org/releases/individual/xserver/xorg-server-${VERSION}.tar.xz"
+DEPENDS="libxkbfile libXfont2"
+
+build() {
+    meson setup build --prefix=/usr
+    ninja -C build -j $UPAC_JOBS
+}
+
+upac_install() {
+    DESTDIR="$1" ninja -C build install
+}

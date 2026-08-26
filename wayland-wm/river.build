@@ -1,0 +1,14 @@
+NAME="river"
+VERSION="latest"
+REVISION=1
+URL="https://github.com/riverwm/river/archive/v${VERSION}.tar.gz"
+DEPENDS="wayland wlroots"
+
+build() {
+    zig build -Doptimize=ReleaseSafe
+}
+
+upac_install() {
+    install -Dm755 zig-out/bin/river "$1/usr/bin/river"
+    install -Dm755 zig-out/bin/riverctl "$1/usr/bin/riverctl"
+}

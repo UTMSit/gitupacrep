@@ -1,0 +1,14 @@
+NAME="openssh"
+VERSION="latest"
+REVISION=1
+URL="https://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${VERSION}.tar.gz"
+DEPENDS="openssl zlib"
+
+build() {
+    ./configure --prefix=/usr --sysconfdir=/etc/ssh
+    make -j $UPAC_JOBS
+}
+
+upac_install() {
+    DESTDIR="$1" make install
+}

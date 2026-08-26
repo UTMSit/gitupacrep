@@ -1,0 +1,14 @@
+NAME="mutter"
+VERSION="46.4"
+REVISION=1
+URL="https://download.gnome.org/sources/mutter/46/mutter-${VERSION}.tar.xz"
+DEPENDS="gtk4 wayland"
+
+build() {
+    meson setup build --prefix=/usr
+    ninja -C build -j $UPAC_JOBS
+}
+
+upac_install() {
+    DESTDIR="$1" ninja -C build install
+}

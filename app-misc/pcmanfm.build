@@ -1,0 +1,14 @@
+NAME="pcmanfm"
+VERSION="1.3.2"
+REVISION=1
+URL="https://sourceforge.net/projects/pcmanfm/files/pcmanfm-${VERSION}.tar.xz/download"
+DEPENDS="gtk+3 libfm"
+
+build() {
+    ./configure --prefix=/usr
+    make -j $UPAC_JOBS
+}
+
+upac_install() {
+    DESTDIR="$1" make install
+}

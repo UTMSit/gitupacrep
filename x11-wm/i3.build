@@ -1,0 +1,14 @@
+NAME="i3"
+VERSION="latest"
+REVISION=1
+URL="https://github.com/i3/i3/archive/${VERSION}.tar.gz"
+DEPENDS="libxcb xcb-util"
+
+build() {
+    meson setup build --prefix=/usr
+    ninja -C build -j $UPAC_JOBS
+}
+
+upac_install() {
+    DESTDIR="$1" ninja -C build install
+}

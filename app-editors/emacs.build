@@ -1,0 +1,14 @@
+NAME="emacs"
+VERSION="latest"
+REVISION=1
+URL="https://ftp.gnu.org/gnu/emacs/emacs-${VERSION}.tar.xz"
+DEPENDS="ncurses glib"
+
+build() {
+    ./configure --prefix=/usr --with-x=no
+    make -j $UPAC_JOBS
+}
+
+upac_install() {
+    DESTDIR="$1" make install
+}

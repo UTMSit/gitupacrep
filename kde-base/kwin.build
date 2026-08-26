@@ -1,0 +1,14 @@
+NAME="kwin"
+VERSION="6.1.4"
+REVISION=1
+URL="https://download.kde.org/stable/plasma/${VERSION}/kwin-${VERSION}.tar.xz"
+DEPENDS="qt6-base wayland"
+
+build() {
+    cmake -B build -DCMAKE_INSTALL_PREFIX=/usr
+    cmake --build build -j $UPAC_JOBS
+}
+
+upac_install() {
+    DESTDIR="$1" cmake --install build
+}

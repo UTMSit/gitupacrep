@@ -1,0 +1,14 @@
+NAME="gnome-terminal"
+VERSION="3.52.2"
+REVISION=1
+URL="https://download.gnome.org/sources/gnome-terminal/3.52/gnome-terminal-${VERSION}.tar.xz"
+DEPENDS="vte gtk4"
+
+build() {
+    meson setup build --prefix=/usr
+    ninja -C build -j $UPAC_JOBS
+}
+
+upac_install() {
+    DESTDIR="$1" ninja -C build install
+}

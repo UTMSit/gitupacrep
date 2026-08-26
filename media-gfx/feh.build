@@ -1,0 +1,13 @@
+NAME="feh"
+VERSION="latest"
+REVISION=1
+URL="https://github.com/derf/feh/archive/${VERSION}.tar.gz"
+DEPENDS="imlib2 libxinerama"
+
+build() {
+    make PREFIX=/usr -j $UPAC_JOBS
+}
+
+upac_install() {
+    DESTDIR="$1" make PREFIX=/usr install
+}

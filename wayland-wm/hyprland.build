@@ -1,0 +1,16 @@
+NAME="hyprland"
+VERSION="latest"
+REVISION=1
+URL="https://github.com/hyprwm/Hyprland/releases/download/v${VERSION}/source-v${VERSION}.tar.gz"
+DEPENDS="wayland xorg"
+
+build() {
+    mkdir build
+    cd build
+    cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+    make -j $UPAC_JOBS
+}
+
+upac_install() {
+    DESTDIR="$1" make -C build install
+}

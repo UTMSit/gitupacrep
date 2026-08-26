@@ -1,0 +1,14 @@
+NAME="nano"
+VERSION="latest"
+REVISION=1
+URL="https://ftp.gnu.org/gnu/nano/nano-${VERSION}.tar.xz"
+DEPENDS="ncurses"
+
+build() {
+    ./configure --prefix=/usr
+    make -j $UPAC_JOBS
+}
+
+upac_install() {
+    DESTDIR="$1" make install
+}

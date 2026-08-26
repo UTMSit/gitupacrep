@@ -1,0 +1,13 @@
+NAME="alacritty"
+VERSION="latest"
+REVISION=1
+URL="https://github.com/alacritty/alacritty/archive/v${VERSION}.tar.gz"
+DEPENDS="freetype fontconfig"
+
+build() {
+    cargo build --release
+}
+
+upac_install() {
+    install -Dm755 target/release/alacritty "$1/usr/bin/alacritty"
+}

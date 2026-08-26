@@ -1,0 +1,14 @@
+NAME="zed"
+VERSION="latest"
+REVISION=1
+URL="https://github.com/zed-industries/zed/archive/v${VERSION}.tar.gz"
+DEPENDS="rust"
+
+build() {
+    cargo build --release -p zed
+}
+
+upac_install() {
+    install -Dm755 target/release/zed "$1/usr/bin/zed"
+    install -Dm644 crates/zed/resources/app-icon.png "$1/usr/share/icons/hicolor/512x512/apps/zed.png"
+}

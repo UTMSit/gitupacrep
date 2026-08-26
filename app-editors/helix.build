@@ -1,0 +1,14 @@
+NAME="helix"
+VERSION="latest"
+REVISION=1
+URL="https://github.com/helix-editor/helix/archive/${VERSION}.tar.gz"
+DEPENDS="rust"
+
+build() {
+    cargo install --path helix-term --locked
+}
+
+upac_install() {
+    install -Dm755 target/release/hx "$1/usr/bin/hx"
+    cp -r runtime "$1/usr/share/helix"
+}

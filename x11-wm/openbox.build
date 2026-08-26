@@ -1,0 +1,14 @@
+NAME="openbox"
+VERSION="3.6.1"
+REVISION=1
+URL="http://openbox.org/dist/openbox/openbox-${VERSION}.tar.gz"
+DEPENDS="libxcb glib"
+
+build() {
+    ./configure --prefix=/usr
+    make -j $UPAC_JOBS
+}
+
+upac_install() {
+    DESTDIR="$1" make install
+}

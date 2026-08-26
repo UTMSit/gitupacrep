@@ -1,0 +1,14 @@
+NAME="nautilus"
+VERSION="46.2"
+REVISION=1
+URL="https://download.gnome.org/sources/nautilus/46/nautilus-${VERSION}.tar.xz"
+DEPENDS="gtk4 glib"
+
+build() {
+    meson setup build --prefix=/usr
+    ninja -C build -j $UPAC_JOBS
+}
+
+upac_install() {
+    DESTDIR="$1" ninja -C build install
+}

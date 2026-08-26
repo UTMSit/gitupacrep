@@ -1,0 +1,14 @@
+NAME="gdm"
+VERSION="46.0"
+REVISION=1
+URL="https://download.gnome.org/sources/gdm/46/gdm-${VERSION}.tar.xz"
+DEPENDS="systemd gtk+3"
+
+build() {
+    meson setup build --prefix=/usr
+    ninja -C build -j $UPAC_JOBS
+}
+
+upac_install() {
+    DESTDIR="$1" ninja -C build install
+}

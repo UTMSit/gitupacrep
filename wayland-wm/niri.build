@@ -1,0 +1,14 @@
+NAME="niri"
+VERSION="latest"
+REVISION=1
+URL="https://github.com/YaLTeR/niri/archive/v${VERSION}.tar.gz"
+DEPENDS="wayland wlroots"
+
+build() {
+    cargo build --release
+}
+
+upac_install() {
+    install -Dm755 target/release/niri "$1/usr/bin/niri"
+    install -Dm644 resources/niri-session "$1/usr/share/wayland-sessions/niri.desktop"
+}

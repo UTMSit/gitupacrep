@@ -1,0 +1,13 @@
+NAME="lapce"
+VERSION="latest"
+REVISION=1
+URL="https://github.com/lapce/lapce/archive/v${VERSION}.tar.gz"
+DEPENDS="rust"
+
+build() {
+    cargo build --release -p lapce
+}
+
+upac_install() {
+    install -Dm755 target/release/lapce "$1/usr/bin/lapce"
+}

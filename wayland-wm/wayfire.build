@@ -1,0 +1,14 @@
+NAME="wayfire"
+VERSION="latest"
+REVISION=1
+URL="https://github.com/WayfireWM/wayfire/archive/v${VERSION}.tar.gz"
+DEPENDS="wayland wlroots"
+
+build() {
+    meson setup build --prefix=/usr
+    ninja -C build -j $UPAC_JOBS
+}
+
+upac_install() {
+    DESTDIR="$1" ninja -C build install
+}

@@ -1,0 +1,14 @@
+NAME="dwm"
+VERSION="latest"
+REVISION=1
+URL="https://dl.suckless.org/dwm/dwm-${VERSION}.tar.gz"
+DEPENDS="libX11 libXinerama"
+
+build() {
+    make -j $UPAC_JOBS
+}
+
+upac_install() {
+    install -Dm755 dwm "$1/usr/bin/dwm"
+    install -Dm644 dwm.1 "$1/usr/share/man/man1/dwm.1"
+}

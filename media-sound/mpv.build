@@ -1,0 +1,14 @@
+NAME="mpv"
+VERSION="latest"
+REVISION=1
+URL="https://github.com/mpv-player/mpv/archive/v${VERSION}.tar.gz"
+DEPENDS="ffmpeg libass"
+
+build() {
+    meson setup build --prefix=/usr
+    meson compile -C build -j $UPAC_JOBS
+}
+
+upac_install() {
+    DESTDIR="$1" meson install -C build
+}

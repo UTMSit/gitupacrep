@@ -1,0 +1,13 @@
+NAME="kakoune"
+VERSION="latest"
+REVISION=1
+URL="https://github.com/mawww/kakoune/archive/v${VERSION}.tar.gz"
+
+build() {
+    cd src
+    make -j $UPAC_JOBS
+}
+
+upac_install() {
+    DESTDIR="$1" make -C src install
+}

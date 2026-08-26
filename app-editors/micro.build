@@ -1,0 +1,13 @@
+NAME="micro"
+VERSION="latest"
+REVISION=1
+URL="https://github.com/zyedidia/micro/archive/v${VERSION}.tar.gz"
+DEPENDS="golang"
+
+build() {
+    make build
+}
+
+upac_install() {
+    install -Dm755 micro "$1/usr/bin/micro"
+}

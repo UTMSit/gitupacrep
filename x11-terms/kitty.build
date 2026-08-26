@@ -1,0 +1,13 @@
+NAME="kitty"
+VERSION="latest"
+REVISION=1
+URL="https://github.com/kovidgoyal/kitty/archive/v${VERSION}.tar.gz"
+DEPENDS="freetype fontconfig"
+
+build() {
+    python3 setup.py build
+}
+
+upac_install() {
+    DESTDIR="$1" python3 setup.py install
+}

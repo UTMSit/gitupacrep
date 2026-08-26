@@ -1,0 +1,14 @@
+NAME="xfce4-panel"
+VERSION="4.18.6"
+REVISION=1
+URL="https://archive.xfce.org/src/xfce/xfce4-panel/4.18/xfce4-panel-${VERSION}.tar.bz2"
+DEPENDS="gtk+3 libxfce4ui"
+
+build() {
+    ./configure --prefix=/usr
+    make -j $UPAC_JOBS
+}
+
+upac_install() {
+    DESTDIR="$1" make install
+}

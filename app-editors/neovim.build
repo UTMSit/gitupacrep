@@ -1,0 +1,13 @@
+NAME="neovim"
+VERSION="latest"
+REVISION=1
+URL="https://github.com/neovim/neovim/archive/v${VERSION}.tar.gz"
+DEPENDS="libuv libvterm"
+
+build() {
+    make CMAKE_BUILD_TYPE=Release -j $UPAC_JOBS
+}
+
+upac_install() {
+    DESTDIR="$1" make install
+}

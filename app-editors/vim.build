@@ -1,0 +1,14 @@
+NAME="vim"
+VERSION="latest"
+REVISION=1
+URL="https://github.com/vim/vim/archive/v${VERSION}.tar.gz"
+DEPENDS="ncurses"
+
+build() {
+    ./configure --prefix=/usr --with-features=huge --enable-python3interp
+    make -j $UPAC_JOBS
+}
+
+upac_install() {
+    DESTDIR="$1" make install
+}

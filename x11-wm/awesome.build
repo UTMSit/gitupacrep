@@ -1,0 +1,14 @@
+NAME="awesome"
+VERSION="latest"
+REVISION=1
+URL="https://github.com/awesomeWM/awesome/archive/v${VERSION}.tar.gz"
+DEPENDS="lua libxcb"
+
+build() {
+    cmake -B build -DCMAKE_INSTALL_PREFIX=/usr
+    cmake --build build -j $UPAC_JOBS
+}
+
+upac_install() {
+    DESTDIR="$1" cmake --install build
+}

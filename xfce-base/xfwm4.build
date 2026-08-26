@@ -1,0 +1,14 @@
+NAME="xfwm4"
+VERSION="4.18.0"
+REVISION=1
+URL="https://archive.xfce.org/src/xfce/xfwm4/4.18/xfwm4-${VERSION}.tar.bz2"
+DEPENDS="gtk+3 libxfce4ui"
+
+build() {
+    ./configure --prefix=/usr
+    make -j $UPAC_JOBS
+}
+
+upac_install() {
+    DESTDIR="$1" make install
+}
