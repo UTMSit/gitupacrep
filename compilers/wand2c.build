@@ -1,0 +1,14 @@
+NAME=wand2c
+VERSION=latest
+REVISION=1
+URL=https://github.com/user12msd4c/wand2c/archive/refs/heads/main.zip
+DEPENDS="rust"
+
+build() {
+    cargo build --release
+}
+
+upac_install() {
+    mkdir -p "${1}/usr/bin" "${1}/bin"
+    install -m 755 wand2c "${1}/usr/bin/"
+}
