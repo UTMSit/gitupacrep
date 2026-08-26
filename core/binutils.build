@@ -5,6 +5,7 @@ URL=https://ftp.gnu.org/gnu/binutils/binutils-${VERSION}.tar.bz2
 DEPENDS=""
 
 build() {
+    rm -rf build
     mkdir -p build && cd build
     export CFLAGS="-O2 -std=gnu11"
     export CXXFLAGS="-O2 -std=gnu++14"
