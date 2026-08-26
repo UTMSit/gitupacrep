@@ -5,12 +5,10 @@ URL=https://ftp.gnu.org/gnu/binutils/binutils-${VERSION}.tar.xz
 DEPENDS=""
 
 build() {
-    cd binutils-${VERSION}
     ./configure --prefix=/usr --disable-werror
     make -j$(nproc)
 }
 
-install() {
-    cd binutils-${VERSION}
+upac_install() {
     make DESTDIR="${1}" install
 }

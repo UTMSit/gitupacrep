@@ -1,16 +1,15 @@
 NAME=e2fsprogs
 VERSION=1.47.0
 REVISION=1
-URL=https://sourceforge.net/projects/e2fsprogs/files/e2fsprogs/v${VERSION}/e2fsprogs-${VERSION}.tar.gz
+URL=https://downloads.sourceforge.net/project/e2fsprogs/e2fsprogs/v${VERSION}/e2fsprogs-${VERSION}.tar.gz
 DEPENDS=""
 
 build() {
-    cd e2fsprogs-${VERSION}
-    ./configure --prefix=/usr --with-root-prefix=/usr
+    ./configure --prefix=/usr --with-root-prefix=/usr --enable-elf-shlibs
     make -j$(nproc)
 }
 
-install() {
-    cd e2fsprogs-${VERSION}
+upac_install() {
     make DESTDIR="${1}" install
+    make DESTDIR="${1}" install-libs
 }

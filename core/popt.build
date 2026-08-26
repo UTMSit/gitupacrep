@@ -1,7 +1,7 @@
-NAME=make
-VERSION=4.4.1
+NAME=popt
+VERSION=1.19
 REVISION=1
-URL=https://ftp.gnu.org/gnu/make/make-${VERSION}.tar.gz
+URL=https://ftp.osuosl.org/pub/rpm/popt/releases/popt-1.x/popt-${VERSION}.tar.gz
 DEPENDS=""
 
 build() {
