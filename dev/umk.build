@@ -1,7 +1,7 @@
 NAME=umk
 VERSION=latest
 REVISION=1
-URL=https://github.com/user12msd4c/umk/archive/refs/heads/main.tar.gz
+URL=https://github.com/user12msd4c/umk/archive/refs/heads/main.zip
 DEPENDS=""
 
 build() {

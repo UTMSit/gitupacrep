@@ -1,7 +1,7 @@
 NAME=crinit
 VERSION=latest
 REVISION=1
-URL=https://github.com/UTMSit/crinit/archive/refs/heads/main.tar.gz
+URL=https://github.com/UTMSit/crinit/archive/refs/heads/main.zip
 DEPENDS=""
 
 build() {
