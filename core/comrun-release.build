@@ -12,9 +12,11 @@ PRETTY_NAME="comrun"
 ID=comrun
 VARIANT_ID=7
 EOF
+    echo "comrun" > release/hostname
 }
 
 upac_install() {
     mkdir -p /etc
     install -m 644 release/os-release /etc/os-release
+    install -m 644 release/hostname /etc/hostname
 }
