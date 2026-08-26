@@ -1,0 +1,38 @@
+NAME=linux
+VERSION=latest
+REVISION=1
+URL=
+DEPENDS=""
+
+build() {
+    echo "[linux] Fetching latest version from kernel.org..."
+    JSON=$(curl -s https://www.kernel.org/releases.json)
+
+    # Get the first archive URL from the releases array (this is always mainline/latest)
+    ARCHIVE_URL=$(echo "$JSON" | grep -o 'https://[^"]*\.tar\.xz' | head -1)
+    REAL_VERSION=$(echo "$ARCHIVE_URL" | sed 's/.*linux-\([0-9.]*\)\.tar\.xz/\1/')
+
+    echo "[linux] Latest version: ${REAL_VERSION}"
+    echo "[linux] Downloading ${ARCHIVE_URL}..."
+
+    curl -fL -o "linux-${REAL_VERSION}.tar.xz" "${ARCHIVE_URL}"
+
+    echo "[linux] Extracting..."
+    tar -xf "linux-${REAL_VERSION}.tar.xz"
+
+    # Save real version for the install phase
+    echo "${REAL_VERSION}" > .linux_version
+}
+
+upac_install() {
+    REAL_VERSION=$(cat .linux_version 2>/dev/null || echo "latest")
+    echo "[linux] Installing kernel sources to ${1}/usr/src/linux-${REAL_VERSION}"
+
+    mkdir -p "${1}/usr/src"
+
+    # Find the extracted directory (matches linux-* but not the .tar.xz file)
+    SRC_DIR=$(ls -d linux-* | grep -v tar.xz | head -1)
+
+    cp -r "${SRC_DIR}" "${1}/usr/src/linux-${REAL_VERSION}"
+    ln -sf "linux-${REAL_VERSION}" "${1}/usr/src/linux"
+}
