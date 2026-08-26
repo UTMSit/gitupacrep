@@ -7,8 +7,8 @@ DEPENDS=""
 build() {
     rm -rf build
     mkdir -p build && cd build
-    export CFLAGS="-O2 -std=gnu11"
-    export CXXFLAGS="-O2 -std=gnu++14"
+    export CFLAGS="-O1 -std=gnu11"
+    export CXXFLAGS="-O1 -std=gnu++14"
     ../configure \
         --prefix=/usr \
         --disable-werror \
