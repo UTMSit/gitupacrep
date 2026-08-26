@@ -1,0 +1,27 @@
+NAME=sfc
+VERSION=latest
+REVISION=1
+URL=https://github.com/user12msd4c/sfc/archive/refs/heads/main.zip
+DEPENDS="rust"
+
+build() {
+    cargo build --release
+    cd target/release
+    ln -sf ls dir
+    ln -sf ls vdir
+    ln -sf touch mk
+    ln -sf id whoami
+}
+
+upac_install() {
+    mkdir -p "${1}/usr/bin" "${1}/bin"
+
+    cd target/release
+    for bin in *; do
+        if [ -f "$bin" ] || [ -L "$bin" ]; then
+            install -m 755 "$bin" "${1}/usr/bin/" 2>/dev/null || cp -P "$bin" "${1}/usr/bin/"
+        fi
+    done
+
+    ln -sf ../usr/bin/sfsh "${1}/bin/sh"
+}

@@ -1,13 +1,14 @@
-NAME=umk
+NAME=wyo
 VERSION=latest
 REVISION=1
-URL=https://github.com/user12msd4c/umk/archive/refs/heads/main.zip
-DEPENDS=""
+URL=https://github.com/utmsit/wyowm/archive/refs/heads/main.zip
+DEPENDS="umk gcc"
 
 build() {
-    umk build -j${UPAC_JOBS:-4}    
+    umk build -j${UPAC_JOBS:-4}
 }
 
 upac_install() {
-    umk install
+    mkdir -p "${1}/usr/bin"
+    install -m 755 wyo "${1}/usr/bin/"
 }
