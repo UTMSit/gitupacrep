@@ -1,0 +1,20 @@
+NAME=comrun-release
+VERSION=7
+REVISION=1
+URL=
+DEPENDS=""
+
+build() {
+    mkdir -p release
+    cat > release/os-release <<'EOF'
+NAME="comrun"
+PRETTY_NAME="comrun"
+ID=comrun
+VARIANT_ID=7
+EOF
+}
+
+upac_install() {
+    mkdir -p /etc
+    install -m 644 release/os-release /etc/os-release
+}
