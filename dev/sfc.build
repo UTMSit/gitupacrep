@@ -1,0 +1,24 @@
+NAME=sfc
+VERSION=0.1.0
+REVISION=1
+URL=https://github.com/user12msd4c/sfc/archive/refs/heads/main.zip
+DEPENDS="cargo"
+
+build() {
+    cd sfc-main
+    cargo build --release
+}
+
+install() {
+    cd sfc-main
+    mkdir -p "${1}/usr/bin"
+    install -m 755 target/release/* "${1}/usr/bin/" 2>/dev/null || true
+    
+    # Create symlinks for coreutils
+    for cmd in cat ls cp mv mkdir rm rmdir touch echo pwd cd; do
+        if [ -f "${1}/usr/bin/$cmd" ]; then
+            continue
+        fi
+        ln -sf /usr/bin/sfc "${1}/usr/bin/$cmd" 2>/dev/null || true
+    done
+}

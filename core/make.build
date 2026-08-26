@@ -1,0 +1,16 @@
+NAME=make
+VERSION=4.4.1
+REVISION=1
+URL=https://ftp.gnu.org/gnu/make/make-${VERSION}.tar.gz
+DEPENDS=""
+
+build() {
+    cd make-${VERSION}
+    ./configure --prefix=/usr
+    make -j$(nproc)
+}
+
+install() {
+    cd make-${VERSION}
+    make DESTDIR="${1}" install
+}

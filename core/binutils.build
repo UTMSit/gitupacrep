@@ -1,0 +1,16 @@
+NAME=binutils
+VERSION=2.42
+REVISION=1
+URL=https://ftp.gnu.org/gnu/binutils/binutils-${VERSION}.tar.xz
+DEPENDS=""
+
+build() {
+    cd binutils-${VERSION}
+    ./configure --prefix=/usr --disable-werror
+    make -j$(nproc)
+}
+
+install() {
+    cd binutils-${VERSION}
+    make DESTDIR="${1}" install
+}

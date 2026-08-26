@@ -1,0 +1,26 @@
+NAME=firefox
+VERSION=128.0
+REVISION=1
+URL=https://archive.mozilla.org/pub/firefox/releases/${VERSION}/source/firefox-${VERSION}.source.tar.xz
+DEPENDS="rust cargo python3 gtk3 dbus-glib yasm nasm"
+
+build() {
+    cd firefox-${VERSION}
+    
+    # Create mozconfig
+    cat > mozconfig << 'EOF'
+ac_add_options --enable-application=browser
+ac_add_options --disable-debug
+ac_add_options --enable-optimize
+ac_add_options --enable-release
+ac_add_options --prefix=/usr
+mk_add_options MOZ_MAKE_FLAGS="-j$(nproc)"
+EOF
+    
+    ./mach build
+}
+
+install() {
+    cd firefox-${VERSION}
+    ./mach install DESTDIR="${1}"
+}

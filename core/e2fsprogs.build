@@ -1,0 +1,16 @@
+NAME=e2fsprogs
+VERSION=1.47.0
+REVISION=1
+URL=https://sourceforge.net/projects/e2fsprogs/files/e2fsprogs/v${VERSION}/e2fsprogs-${VERSION}.tar.gz
+DEPENDS=""
+
+build() {
+    cd e2fsprogs-${VERSION}
+    ./configure --prefix=/usr --with-root-prefix=/usr
+    make -j$(nproc)
+}
+
+install() {
+    cd e2fsprogs-${VERSION}
+    make DESTDIR="${1}" install
+}

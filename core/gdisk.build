@@ -1,0 +1,16 @@
+NAME=gdisk
+VERSION=1.0.10
+REVISION=1
+URL=https://sourceforge.net/projects/gptfdisk/files/gptfdisk/${VERSION}/gptfdisk-${VERSION}.tar.gz
+DEPENDS="popt"
+
+build() {
+    cd gptfdisk-${VERSION}
+    make -j$(nproc)
+}
+
+install() {
+    cd gptfdisk-${VERSION}
+    mkdir -p "${1}/usr/bin"
+    install -m 755 gdisk sgdisk cgdisk fixparts "${1}/usr/bin/"
+}
