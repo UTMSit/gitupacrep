@@ -5,7 +5,7 @@ URL=https://github.com/user12msd4c/umk/archive/refs/tags/v${VERSION}.tar.gz
 DEPENDS=""
 
 build() {
-    gcc -O3 -Wall -Wextra -o umk umk.c
+    gcc -O3 -Wall -Wextra -o umk umk.c -j${UPAC_JOBS:-4}
 }
 
 upac_install() {

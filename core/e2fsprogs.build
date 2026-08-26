@@ -6,7 +6,7 @@ DEPENDS=""
 
 build() {
     ./configure --prefix=/usr --with-root-prefix=/usr --enable-elf-shlibs
-    make -j$(nproc)
+    make -j${UPAC_JOBS:-4}
 }
 
 upac_install() {

@@ -5,8 +5,8 @@ URL=https://ftp.gnu.org/gnu/binutils/binutils-${VERSION}.tar.xz
 DEPENDS=""
 
 build() {
-    ./configure --prefix=/usr --disable-werror
-    make -j$(nproc)
+    ./configure --prefix=/usr --disable-werror --disable-gprofng
+    make -j${UPAC_JOBS:-4}
 }
 
 upac_install() {
