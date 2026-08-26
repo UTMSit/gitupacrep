@@ -6,6 +6,8 @@ DEPENDS=""
 
 build() {
     mkdir -p build && cd build
+    export CFLAGS="-O2 -std=gnu11"
+    export CXXFLAGS="-O2 -std=gnu++14"
     ../configure \
         --prefix=/usr \
         --disable-werror \
