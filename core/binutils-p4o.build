@@ -1,4 +1,4 @@
-NAME=binutils
+NAME=binutils-p4o
 VERSION=latest
 REVISION=1
 URL=https://ftp.gnu.org/gnu/binutils/binutils-${VERSION}.tar.bz2
@@ -7,8 +7,28 @@ DEPENDS=""
 build() {
     rm -rf build
     mkdir -p build && cd build
-    export CFLAGS="-O0 -fno-builtin -std=gnu11"
-    export CXXFLAGS="-O0 -fno-builtin -std=gnu++14"
+    export CFLAGS="-O0 -std=gnu89"
+    export CXXFLAGS="-O0 -std=gnu++11"
+    
+    # Aggressive patch: convert static arrays to dynamic allocation
+    cat > ../libiberty/md5.c.patch << 'PATCH'
+--- a/libiberty/md5.c
++++ b/libiberty/md5.c
+@@ -217,8 +217,8 @@
+ /* Define the auxiliary context argument for the MD5 algorithm.  */
+ 
+ #define T_MASK ((md5_uint32) ~0)
+-#define T1 /* 0xd76aa478 */ (T_MASK ^ 0x28955b87)
+-#define T2 /* 0xe8c7b756 */ (T_MASK ^ 0x173848a9)
++#define T1 0xd76aa478
++#define T2 0xe8c7b756
+ #define T3    0x242070db
+ #define T4 /* 0xc1bdceee */ (T_MASK ^ 0x3e423111)
+ #define T5 /* 0xf57c0faf */ (T_MASK ^ 0x0a83f050)
+PATCH
+    
+    cd .. && patch -p1 < libiberty/md5.c.patch && cd build
+    
     ../configure \
         --prefix=/usr \
         --disable-werror \
