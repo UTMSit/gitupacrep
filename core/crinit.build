@@ -9,6 +9,11 @@ build() {
 }
 
 upac_install() {
-    mkdir -p /sbin
-    install -m 755 crinit /sbin/init
+    mkdir -p "$1/sbin"
+    install -m 755 crinit "$1/sbin/init"
+
+    umk clean >/dev/null 2>&1 || true
+
+    mkdir -p "$1/usr/src/CRinit"
+    cp -r . "$1/usr/src/CRinit/"
 }
