@@ -1,5 +1,5 @@
 NAME=binutils
-VERSION=2.44
+VERSION=latest
 REVISION=1
 URL=https://ftp.gnu.org/gnu/binutils/binutils-${VERSION}.tar.xz
 DEPENDS=""

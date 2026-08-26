@@ -1,14 +1,21 @@
 NAME=gcc
-VERSION=13.2.0
+VERSION=latest
 REVISION=1
 URL=https://ftp.gnu.org/gnu/gcc/gcc-${VERSION}/gcc-${VERSION}.tar.xz
 DEPENDS="gmp mpfr mpc isl"
 
 build() {
-    ./configure --prefix=/usr --enable-languages=c,c++ --disable-multilib
+    mkdir -p build && cd build
+    ../configure \
+        --prefix=/usr \
+        --enable-languages=c,c++ \
+        --disable-multilib \
+        --disable-bootstrap \
+        --with-system-zlib
     make -j${UPAC_JOBS:-4}
 }
 
 upac_install() {
+    cd build
     make DESTDIR="${1}" install
 }
