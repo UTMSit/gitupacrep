@@ -5,7 +5,7 @@ URL=https://github.com/UTMSit/upac/archive/refs/tags/v${VERSION}.tar.gz
 DEPENDS=""
 
 build() {
-    gcc -O2 -Wall -Wextra -std=c11 -o upac main.c db.c repo.c build.c install.c remove.c search.c
+    umk build -j${UPAC_JOBS:-4}
 }
 
 upac_install() {
