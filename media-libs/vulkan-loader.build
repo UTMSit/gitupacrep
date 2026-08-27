@@ -1,0 +1,23 @@
+NAME=vulkan-loader
+VERSION=latest
+REVISION=1
+URL=https://github.com/KhronosGroup/Vulkan-Loader/archive/refs/heads/main.zip
+DEPENDS="vulkan-headers"
+
+build() {
+    mkdir -p build && cd build
+    cmake .. \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DBUILD_TESTS=OFF \
+        -DBUILD_WSI_XLIB_SUPPORT=ON \
+        -DBUILD_WSI_XCB_SUPPORT=ON \
+        -DBUILD_WSI_WAYLAND_SUPPORT=ON
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    cd build
+    make install
+    ldconfig
+}

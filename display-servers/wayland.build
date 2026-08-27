@@ -1,0 +1,19 @@
+NAME=wayland
+VERSION=latest
+REVISION=1
+URL=https://gitlab.freedesktop.org/wayland/wayland/-/archive/main/wayland-main.tar.gz
+DEPENDS="libxml2 expat"
+
+build() {
+    mkdir -p build && cd build
+    meson setup .. \
+        --prefix=/usr \
+        -Ddocumentation=false \
+        -Dtests=false
+    ninja
+}
+
+upac_install() {
+    cd build
+    ninja install
+}

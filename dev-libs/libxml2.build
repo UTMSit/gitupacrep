@@ -1,0 +1,14 @@
+NAME=libxml2
+VERSION=latest
+REVISION=1
+URL=https://gitlab.gnome.org/GNOME/libxml2/-/archive/master/libxml2-master.tar.gz
+DEPENDS="zlib"
+
+build() {
+    ./autogen.sh --prefix=/usr --without-python
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make install
+}

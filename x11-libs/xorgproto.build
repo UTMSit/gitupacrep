@@ -1,0 +1,13 @@
+NAME=xorgproto
+VERSION=latest
+REVISION=1
+URL=https://gitlab.freedesktop.org/xorg/proto/xorgproto/-/archive/master/xorgproto-master.tar.gz
+DEPENDS=""
+
+build() {
+    ./autogen.sh --prefix=/usr
+}
+
+upac_install() {
+    make install
+}

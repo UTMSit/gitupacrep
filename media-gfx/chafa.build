@@ -1,0 +1,14 @@
+NAME=chafa
+VERSION=latest
+REVISION=1
+URL=https://github.com/hpjansson/chafa/archive/refs/heads/master.zip
+DEPENDS="glib"
+
+build() {
+    ./autogen.sh --prefix=/usr
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make install
+}

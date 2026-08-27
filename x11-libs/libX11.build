@@ -1,0 +1,14 @@
+NAME=libX11
+VERSION=latest
+REVISION=1
+URL=https://gitlab.freedesktop.org/xorg/lib/libx11/-/archive/master/libx11-master.tar.gz
+DEPENDS="xorgproto libxcb"
+
+build() {
+    ./autogen.sh --prefix=/usr
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make install
+}

@@ -1,0 +1,14 @@
+NAME=libXext
+VERSION=latest
+REVISION=1
+URL=https://gitlab.freedesktop.org/xorg/lib/libxext/-/archive/master/libxext-master.tar.gz
+DEPENDS="libX11 xorgproto"
+
+build() {
+    ./autogen.sh --prefix=/usr
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make install
+}

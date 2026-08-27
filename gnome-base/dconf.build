@@ -1,0 +1,19 @@
+NAME=dconf
+VERSION=latest
+REVISION=1
+URL=https://gitlab.gnome.org/GNOME/dconf/-/archive/master/dconf-master.tar.gz
+DEPENDS="glib dbus"
+
+build() {
+    mkdir -p build && cd build
+    meson setup .. \
+        --prefix=/usr \
+        -Dbash_completion=false \
+        -Dman=false
+    ninja
+}
+
+upac_install() {
+    cd build
+    ninja install
+}

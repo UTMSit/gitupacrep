@@ -1,0 +1,14 @@
+NAME=libXrender
+VERSION=latest
+REVISION=1
+URL=https://gitlab.freedesktop.org/xorg/lib/libxrender/-/archive/master/libxrender-master.tar.gz
+DEPENDS="libX11"
+
+build() {
+    ./autogen.sh --prefix=/usr
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make install
+}

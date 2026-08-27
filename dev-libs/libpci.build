@@ -1,0 +1,15 @@
+NAME=libpci
+VERSION=latest
+REVISION=1
+URL=https://github.com/pciutils/pciutils/archive/refs/heads/master.zip
+DEPENDS="zlib"
+
+build() {
+    make PREFIX=/usr SHARED=yes SHAREDIR=/usr/share/hwdata ZLIB=yes
+}
+
+upac_install() {
+    make PREFIX=/usr SHARED=yes SHAREDIR=/usr/share/hwdata install install-lib
+    # Обновить базу PCI устройств
+    /usr/sbin/update-pciids
+}

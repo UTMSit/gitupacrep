@@ -1,0 +1,13 @@
+NAME=hwdata
+VERSION=latest
+REVISION=1
+URL=https://github.com/vcrhonek/hwdata/archive/refs/heads/master.zip
+DEPENDS=""
+
+build() {
+    ./configure --prefix=/usr
+}
+
+upac_install() {
+    make install
+}

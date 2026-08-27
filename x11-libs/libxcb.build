@@ -1,0 +1,14 @@
+NAME=libxcb
+VERSION=latest
+REVISION=1
+URL=https://gitlab.freedesktop.org/xorg/lib/libxcb/-/archive/master/libxcb-master.tar.gz
+DEPENDS="xcb-proto libXau libXdmcp"
+
+build() {
+    ./autogen.sh --prefix=/usr
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make install
+}

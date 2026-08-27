@@ -1,0 +1,14 @@
+NAME=libXrandr
+VERSION=latest
+REVISION=1
+URL=https://gitlab.freedesktop.org/xorg/lib/libxrandr/-/archive/master/libxrandr-master.tar.gz
+DEPENDS="libX11 libXext libXrender"
+
+build() {
+    ./autogen.sh --prefix=/usr
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make install
+}

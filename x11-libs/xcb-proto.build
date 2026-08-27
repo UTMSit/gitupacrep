@@ -1,0 +1,13 @@
+NAME=xcb-proto
+VERSION=latest
+REVISION=1
+URL=https://gitlab.freedesktop.org/xorg/proto/xcbproto/-/archive/master/xcbproto-master.tar.gz
+DEPENDS=""
+
+build() {
+    ./autogen.sh --prefix=/usr
+}
+
+upac_install() {
+    make install
+}

@@ -1,0 +1,19 @@
+NAME=libdrm
+VERSION=latest
+REVISION=1
+URL=https://gitlab.freedesktop.org/mesa/drm/-/archive/main/drm-main.tar.gz
+DEPENDS=""
+
+build() {
+    mkdir -p build && cd build
+    meson setup .. \
+        --prefix=/usr \
+        -Dtests=false \
+        -Dudev=true
+    ninja
+}
+
+upac_install() {
+    cd build
+    ninja install
+}
