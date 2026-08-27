@@ -2,7 +2,7 @@ NAME=libxcb
 VERSION=latest
 REVISION=1
 URL=https://gitlab.freedesktop.org/xorg/lib/libxcb/-/archive/master/libxcb-master.tar.gz
-DEPENDS="xcb-proto libXau libXdmcp"
+DEPENDS="xcb-proto libXau libXdmcp xorgproto"
 
 build() {
     ./autogen.sh --prefix=/usr

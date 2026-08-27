@@ -1,0 +1,14 @@
+NAME=libXau
+VERSION=latest
+REVISION=1
+URL=https://gitlab.freedesktop.org/xorg/lib/libxau/-/archive/master/libxau-master.tar.gz
+DEPENDS="xorgproto"
+
+build() {
+    ./autogen.sh --prefix=/usr
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make install
+}
