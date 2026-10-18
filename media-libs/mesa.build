@@ -1,0 +1,36 @@
+NAME=mesa
+VERSION=latest
+REVISION=1
+URL=https://gitlab.freedesktop.org/mesa/mesa/-/archive/main/mesa-main.tar.gz
+DEPENDS="libdrm xorgproto libxcb expat zlib wayland wayland-protocols vulkan-headers python"
+
+build() {
+    mkdir -p build && cd build
+    meson setup .. \
+        --prefix=/usr \
+        --buildtype=release \
+        -Dplatforms=x11,wayland,drm \
+        -Dgallium-drivers=radeonsi,swrast \
+        -Dvulkan-drivers=amd \
+        -Ddri-drivers= \
+        -Dgbm=enabled \
+        -Dgles1=disabled \
+        -Dgles2=enabled \
+        -Degl=gbm,x11,wayland,surfaceless \
+        -Dllvm=enabled \
+        -Dshared-glapi=enabled \
+        -Dxatracker=enabled \
+        -Dzstd=disabled \
+        -Dlz4=disabled \
+        -Dselinux=disabled \
+        -Dseccomp=disabled \
+        -Dvalgrind=disabled \
+        -Dlmsensors=disabled \
+        -Dtests=false
+    ninja
+}
+
+upac_install() {
+    cd build
+    DESTDIR="${1}" ninja install
+}

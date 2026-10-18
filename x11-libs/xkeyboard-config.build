@@ -1,0 +1,17 @@
+NAME=xkeyboard-config
+VERSION=latest
+REVISION=1
+URL=https://gitlab.freedesktop.org/xkeyboard-config/xkeyboard-config/-/archive/master/xkeyboard-config-master.tar.gz
+DEPENDS=""
+
+build() {
+    mkdir -p build && cd build
+    meson setup .. \
+        --prefix=/usr
+    ninja
+}
+
+upac_install() {
+    cd build
+    DESTDIR="${1}" ninja install
+}

@@ -1,0 +1,16 @@
+NAME=libpng
+VERSION=1.6.44
+REVISION=1
+URL=https://download.sourceforge.net/libpng/libpng-1.6.44.tar.xz
+DEPENDS="zlib"
+
+build() {
+    ./configure \
+        --prefix=/usr \
+        --disable-static
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

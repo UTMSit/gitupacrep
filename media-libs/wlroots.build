@@ -1,0 +1,22 @@
+NAME=wlroots
+VERSION=latest
+REVISION=1
+URL=https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/master/wlroots-master.tar.gz
+DEPENDS="wayland wayland-protocols libdrm mesa pixman xkbcommon libinput libseat xcb libX11 libXext libXrender libXrandr libXfixes libXcursor xkeyboard-config"
+
+build() {
+    mkdir -p build && cd build
+    meson setup .. \
+        --prefix=/usr \
+        -Dexamples=false \
+        -Dtests=false \
+        -Dx11=enabled \
+        -Dxwayland=enabled \
+        -Dlibseat=enabled
+    ninja
+}
+
+upac_install() {
+    cd build
+    DESTDIR="${1}" ninja install
+}

@@ -1,0 +1,16 @@
+NAME=libXcursor
+VERSION=1.2.3
+REVISION=1
+URL=https://www.x.org/archive/individual/lib/libXcursor-1.2.3.tar.xz
+DEPENDS="xorgproto libX11 libXfixes libXrender"
+
+build() {
+    ./configure \
+        --prefix=/usr \
+        --disable-static
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

@@ -1,0 +1,16 @@
+NAME=mtdev
+VERSION=1.1.7
+REVISION=1
+URL=https://bitmath.org/code/mtdev/mtdev-1.1.7.tar.bz2
+DEPENDS=""
+
+build() {
+    ./configure \
+        --prefix=/usr \
+        --disable-static
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

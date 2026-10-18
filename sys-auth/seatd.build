@@ -1,0 +1,21 @@
+NAME=seatd
+VERSION=0.9.1
+REVISION=1
+URL=https://codeberg.org/emersion/seatd/archive/seatd-0.9.1.tar.gz
+DEPENDS="eudev"
+
+build() {
+    mkdir -p build && cd build
+    meson setup .. \
+        --prefix=/usr \
+        -Dbuiltin=enabled \
+        -Dlogind=disabled \
+        -Dexamples=false \
+        -Dtests=false
+    ninja
+}
+
+upac_install() {
+    cd build
+    DESTDIR="${1}" ninja install
+}

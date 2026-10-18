@@ -1,0 +1,18 @@
+NAME=wayland-protocols
+VERSION=latest
+REVISION=1
+URL=https://gitlab.freedesktop.org/wayland/wayland-protocols/-/archive/main/wayland-protocols-main.tar.gz
+DEPENDS="wayland"
+
+build() {
+    mkdir -p build && cd build
+    meson setup .. \
+        --prefix=/usr \
+        -Dtests=false
+    ninja
+}
+
+upac_install() {
+    cd build
+    DESTDIR="${1}" ninja install
+}

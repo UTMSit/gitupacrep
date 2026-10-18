@@ -1,14 +1,13 @@
 NAME=wyo
 VERSION=latest
-REVISION=1
+REVISION=3
 URL=https://github.com/utmsit/wyowm/archive/refs/heads/main.zip
-DEPENDS="umk gcc"
+DEPENDS="umk gcc wayland wlroots xkbcommon libinput libdrm mesa pixman gdk-pixbuf libseat seatd xkeyboard-config"
 
 build() {
-    umk build -j${UPAC_JOBS:-4}
+    umk build
 }
 
 upac_install() {
-    mkdir -p "${1}/usr/bin"
-    install -m 755 wyo "${1}/usr/bin/"
+    umk install
 }

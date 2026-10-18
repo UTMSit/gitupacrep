@@ -1,0 +1,21 @@
+NAME=libseat
+VERSION=0.8.1
+REVISION=1
+URL=https://codeberg.org/emersion/libseat/archive/libseat-0.8.1.tar.gz
+DEPENDS="seatd"
+
+build() {
+    mkdir -p build && cd build
+    meson setup .. \
+        --prefix=/usr \
+        -Dseatd=enabled \
+        -Dlogind=disabled \
+        -Dexamples=false \
+        -Dtests=false
+    ninja
+}
+
+upac_install() {
+    cd build
+    DESTDIR="${1}" ninja install
+}

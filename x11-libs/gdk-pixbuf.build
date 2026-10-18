@@ -1,0 +1,21 @@
+NAME=gdk-pixbuf
+VERSION=2.42.12
+REVISION=1
+URL=https://download.gnome.org/sources/gdk-pixbuf/2.42/gdk-pixbuf-2.42.12.tar.xz
+DEPENDS="glib libpng libjpeg-turbo zlib"
+
+build() {
+    mkdir -p build && cd build
+    meson setup .. \
+        --prefix=/usr \
+        -Dintrospection=disabled \
+        -Dtests=false \
+        -Dtiff=disabled \
+        -Dtools=disabled
+    ninja
+}
+
+upac_install() {
+    cd build
+    DESTDIR="${1}" ninja install
+}

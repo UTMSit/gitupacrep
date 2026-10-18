@@ -1,0 +1,20 @@
+NAME=libinput
+VERSION=latest
+REVISION=1
+URL=https://gitlab.freedesktop.org/libinput/libinput/-/archive/main/libinput-main.tar.gz
+DEPENDS="libevdev mtdev eudev xkeyboard-config"
+
+build() {
+    mkdir -p build && cd build
+    meson setup .. \
+        --prefix=/usr \
+        -Dlibwacom=disabled \
+        -Ddebug-log=disabled \
+        -Dtests=disabled
+    ninja
+}
+
+upac_install() {
+    cd build
+    DESTDIR="${1}" ninja install
+}

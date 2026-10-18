@@ -1,0 +1,18 @@
+NAME=libevdev
+VERSION=latest
+REVISION=1
+URL=https://gitlab.freedesktop.org/libevdev/libevdev/-/archive/master/libevdev-master.tar.gz
+DEPENDS=""
+
+build() {
+    mkdir -p build && cd build
+    meson setup .. \
+        --prefix=/usr \
+        -Dtests=disabled
+    ninja
+}
+
+upac_install() {
+    cd build
+    DESTDIR="${1}" ninja install
+}
