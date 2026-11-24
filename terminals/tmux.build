@@ -1,0 +1,14 @@
+NAME="tmux"
+VERSION="3.5a"
+REVISION=1
+URL="https://github.com/tmux/tmux/releases/download/${VERSION}/tmux-${VERSION}.tar.gz"
+DEPENDS="ncurses libevent"
+
+build() {
+    ./configure --prefix=/usr
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

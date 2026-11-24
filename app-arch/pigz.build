@@ -1,0 +1,19 @@
+NAME="pigz"
+VERSION="2.8"
+REVISION=1
+URL="https://zlib.net/pigz/pigz-${VERSION}.tar.gz"
+DEPENDS="zlib"
+
+build() {
+    if command -v sha256sum >/dev/null 2>&1; then
+        printf '%s  ../pigz-%s.tar.gz\n' 'eb872b4f0e1f0ebe59c9f7bd8c506c4204893ba6a8492de31df416f0d5170fd0' '2.8' | sha256sum -c - >/dev/null
+    fi
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    install -D -m 755 pigz "${1}/usr/bin/pigz"
+    ln -sf pigz "${1}/usr/bin/unpigz"
+    install -D -m 644 pigz.1 "${1}/usr/share/man/man1/pigz.1"
+    ln -sf pigz.1 "${1}/usr/share/man/man1/unpigz.1"
+}

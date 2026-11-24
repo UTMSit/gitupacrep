@@ -1,0 +1,13 @@
+NAME="xdotool"
+VERSION="3.20211022.1"
+REVISION=1
+URL="https://github.com/jordansissel/xdotool/archive/refs/tags/v${VERSION}.tar.gz"
+DEPENDS="libX11 libxcb libXrandr libXinerama"
+
+build() {
+    make PREFIX=/usr INSTALLMAN=/usr/share/man -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make PREFIX=/usr INSTALLMAN=/usr/share/man DESTDIR="${1}" install
+}

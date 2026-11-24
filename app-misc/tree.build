@@ -1,0 +1,15 @@
+NAME="tree"
+VERSION="2.1.0"
+REVISION=1
+URL="https://deb.debian.org/debian/pool/main/t/tree/tree_${VERSION}.orig.tar.gz"
+DEPENDS=""
+
+build() {
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    mkdir -p "${1}/usr/bin" "${1}/usr/share/man/man1"
+    install -m 755 tree "${1}/usr/bin/tree"
+    install -m 644 tree.1 "${1}/usr/share/man/man1/tree.1"
+}

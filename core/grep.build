@@ -1,0 +1,14 @@
+NAME="grep"
+VERSION="3.11"
+REVISION=1
+URL="https://ftp.gnu.org/gnu/grep/grep-${VERSION}.tar.xz"
+DEPENDS="pcre2"
+
+build() {
+    ./configure --prefix=/usr --disable-static
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

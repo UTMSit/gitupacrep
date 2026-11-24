@@ -1,0 +1,18 @@
+NAME="bat"
+VERSION="0.26.1"
+REVISION=1
+URL="https://github.com/sharkdp/bat/archive/refs/tags/v${VERSION}.tar.gz"
+DEPENDS="rust"
+
+build() {
+    if command -v sha256sum >/dev/null 2>&1; then
+        printf '%s  ../v0.26.1.tar.gz\n' '4474de87e084953eefc1120cf905a79f72bbbf85091e30cf37c9214eafcaa9c9' | sha256sum -c - >/dev/null
+    fi
+    cargo build --release --locked
+}
+
+upac_install() {
+    install -D -m 755 target/release/bat "${1}/usr/bin/bat"
+    install -D -m 644 LICENSE-MIT "${1}/usr/share/licenses/bat/LICENSE-MIT"
+    install -D -m 644 LICENSE-APACHE "${1}/usr/share/licenses/bat/LICENSE-APACHE"
+}

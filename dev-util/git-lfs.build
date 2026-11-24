@@ -1,0 +1,15 @@
+NAME="git-lfs"
+VERSION="3.5.1"
+REVISION=1
+URL="https://github.com/git-lfs/git-lfs/archive/refs/tags/v${VERSION}.tar.gz"
+DEPENDS="go"
+
+build() {
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    mkdir -p "${1}/usr/bin" "${1}/usr/share/man/man1"
+    install -m 755 bin/git-lfs "${1}/usr/bin/git-lfs"
+    install -m 644 man/man1/*.1 "${1}/usr/share/man/man1/"
+}

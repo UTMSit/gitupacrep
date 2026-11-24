@@ -1,0 +1,14 @@
+NAME="libpcap"
+VERSION="1.10.5"
+REVISION=1
+URL="https://www.tcpdump.org/release/libpcap-${VERSION}.tar.gz"
+DEPENDS=""
+
+build() {
+    ./configure --prefix=/usr --disable-static
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

@@ -1,0 +1,19 @@
+NAME="util-linux"
+VERSION="2.40.2"
+REVISION=1
+URL="https://www.kernel.org/pub/linux/utils/util-linux/v2.40/util-linux-${VERSION}.tar.xz"
+DEPENDS="zlib"
+
+build() {
+    ./configure \
+        --prefix=/usr \
+        --disable-makeinstall-chown \
+        --disable-makeinstall-setuid \
+        --without-python \
+        --with-zlib
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

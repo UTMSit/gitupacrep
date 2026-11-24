@@ -1,0 +1,17 @@
+NAME="libgpg-error"
+VERSION="1.61"
+REVISION=1
+URL="https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-${VERSION}.tar.bz2"
+DEPENDS=""
+
+build() {
+    if command -v sha256sum >/dev/null 2>&1; then
+        printf '%s  ../libgpg-error-1.61.tar.bz2\n' '7a85413f2bc354f4f8aa832b718af122e48965e9e0eb9012ee659c13c6385c93' | sha256sum -c - >/dev/null
+    fi
+    ./configure --prefix=/usr --libdir=/usr/lib --disable-static
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

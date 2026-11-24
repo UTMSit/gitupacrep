@@ -1,0 +1,19 @@
+NAME="go"
+VERSION="1.22.5"
+REVISION=1
+URL="https://go.dev/dl/go${VERSION}.src.tar.gz"
+DEPENDS=""
+
+build() {
+    cd src
+    ./make.bash
+    cd ..
+}
+
+upac_install() {
+    mkdir -p "${1}/usr/lib/go" "${1}/usr/bin"
+    cp -a bin pkg src "${1}/usr/lib/go/"
+    cp -a LICENSE VERSION "${1}/usr/lib/go/"
+    ln -sf ../lib/go/bin/go "${1}/usr/bin/go"
+    ln -sf ../lib/go/bin/gofmt "${1}/usr/bin/gofmt"
+}

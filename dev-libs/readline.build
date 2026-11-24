@@ -1,0 +1,14 @@
+NAME="readline"
+VERSION="8.2"
+REVISION=1
+URL="https://ftp.gnu.org/gnu/readline/readline-${VERSION}.tar.gz"
+DEPENDS="ncurses"
+
+build() {
+    ./configure --prefix=/usr --with-curses
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

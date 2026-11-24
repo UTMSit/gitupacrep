@@ -1,0 +1,13 @@
+NAME="st"
+VERSION="0.9.2"
+REVISION=1
+URL="https://dl.suckless.org/st/st-${VERSION}.tar.gz"
+DEPENDS="libX11 libXext libXrender libXft"
+
+build() {
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make PREFIX=/usr DESTDIR="${1}" install
+}

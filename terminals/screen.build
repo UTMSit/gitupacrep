@@ -1,0 +1,17 @@
+NAME="screen"
+VERSION="4.9.0"
+REVISION=1
+URL="https://ftp.gnu.org/gnu/screen/screen-${VERSION}.tar.gz"
+DEPENDS="ncurses"
+
+build() {
+    ./configure \
+        --prefix=/usr \
+        --sysconfdir=/etc \
+        --with-curses=ncurses
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

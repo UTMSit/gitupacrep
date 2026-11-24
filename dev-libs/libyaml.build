@@ -1,0 +1,17 @@
+NAME="libyaml"
+VERSION="0.2.5"
+REVISION=1
+URL="https://github.com/yaml/libyaml/archive/refs/tags/${VERSION}.tar.gz"
+DEPENDS=""
+
+build() {
+    cmake -B build \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DBUILD_TESTING=OFF
+    cmake --build build -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    DESTDIR="${1}" cmake --install build
+}

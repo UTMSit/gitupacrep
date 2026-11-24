@@ -1,0 +1,17 @@
+NAME="libgcrypt"
+VERSION="1.12.4"
+REVISION=1
+URL="https://gnupg.org/ftp/gcrypt/libgcrypt/libgcrypt-${VERSION}.tar.bz2"
+DEPENDS="libgpg-error"
+
+build() {
+    if command -v sha256sum >/dev/null 2>&1; then
+        printf '%s  ../libgcrypt-1.12.4.tar.bz2\n' 'd77f68f48879510e79a2f65977ccc68981781ea0923e5bdffac2a193ea3d660e' | sha256sum -c - >/dev/null
+    fi
+    ./configure --prefix=/usr --libdir=/usr/lib --with-libgpg-error-prefix=/usr --disable-static
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

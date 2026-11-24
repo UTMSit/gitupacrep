@@ -1,0 +1,14 @@
+NAME="rsync"
+VERSION="3.3.0"
+REVISION=1
+URL="https://download.samba.org/pub/rsync/src/rsync-${VERSION}.tar.gz"
+DEPENDS="zlib openssl"
+
+build() {
+    ./configure --prefix=/usr --with-included-popt=no
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

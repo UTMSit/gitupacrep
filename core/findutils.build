@@ -1,0 +1,14 @@
+NAME="findutils"
+VERSION="4.9.0"
+REVISION=1
+URL="https://ftp.gnu.org/gnu/findutils/findutils-${VERSION}.tar.xz"
+DEPENDS=""
+
+build() {
+    ./configure --prefix=/usr --localstatedir=/var/lib/locate
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

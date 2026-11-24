@@ -1,0 +1,17 @@
+NAME="nodejs"
+VERSION="20.16.0"
+REVISION=1
+URL="https://nodejs.org/dist/v${VERSION}/node-v${VERSION}.tar.gz"
+DEPENDS="python openssl zlib"
+
+build() {
+    ./configure \
+        --prefix=/usr \
+        --shared-openssl \
+        --without-intl
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

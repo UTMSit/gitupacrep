@@ -1,0 +1,19 @@
+NAME="ncurses"
+VERSION="6.5"
+REVISION=1
+URL="https://ftp.gnu.org/gnu/ncurses/ncurses-${VERSION}.tar.gz"
+DEPENDS=""
+
+build() {
+    ./configure \
+        --prefix=/usr \
+        --with-shared \
+        --without-debug \
+        --enable-widec \
+        --with-cxx-binding=no
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

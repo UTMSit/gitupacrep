@@ -1,0 +1,14 @@
+NAME="libXinerama"
+VERSION="1.1.5"
+REVISION=1
+URL="https://www.x.org/archive/individual/lib/libXinerama-${VERSION}.tar.xz"
+DEPENDS="libX11 libXext xorgproto"
+
+build() {
+    ./configure --prefix=/usr --disable-static
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

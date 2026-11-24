@@ -1,0 +1,18 @@
+NAME="sd"
+VERSION="1.1.0"
+REVISION=1
+URL="https://github.com/chmln/sd/archive/refs/tags/v${VERSION}.tar.gz"
+DEPENDS="rust"
+
+build() {
+    if command -v sha256sum >/dev/null 2>&1; then
+        printf '%s  ../v1.1.0.tar.gz\n' 'defdce484f8c92f265e1282490572575028967c2c55d356111d1e49a3ea9a88e' | sha256sum -c - >/dev/null
+    fi
+    cargo build --release --locked
+}
+
+upac_install() {
+    install -D -m 755 target/release/sd "${1}/usr/bin/sd"
+    install -D -m 644 gen/sd.1 "${1}/usr/share/man/man1/sd.1"
+    install -D -m 644 LICENSE "${1}/usr/share/licenses/sd/LICENSE"
+}

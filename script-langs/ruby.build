@@ -1,0 +1,17 @@
+NAME="ruby"
+VERSION="3.3.4"
+REVISION=1
+URL="https://cache.ruby-lang.org/pub/ruby/3.3/ruby-${VERSION}.tar.gz"
+DEPENDS="zlib openssl readline libyaml"
+
+build() {
+    ./configure \
+        --prefix=/usr \
+        --disable-install-doc \
+        --with-out-ext=tk
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

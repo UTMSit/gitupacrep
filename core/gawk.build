@@ -1,0 +1,14 @@
+NAME="gawk"
+VERSION="5.3.0"
+REVISION=1
+URL="https://ftp.gnu.org/gnu/gawk/gawk-${VERSION}.tar.xz"
+DEPENDS=""
+
+build() {
+    ./configure --prefix=/usr
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

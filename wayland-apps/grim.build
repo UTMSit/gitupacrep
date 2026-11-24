@@ -1,0 +1,16 @@
+NAME="grim"
+VERSION="1.4.0"
+REVISION=1
+URL="https://github.com/emersion/grim/archive/refs/tags/v${VERSION}.tar.gz"
+DEPENDS="wayland"
+
+build() {
+    meson setup build \
+        --prefix=/usr \
+        -Dman-pages=disabled
+    ninja -C build -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    DESTDIR="${1}" ninja -C build install
+}

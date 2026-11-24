@@ -1,0 +1,14 @@
+NAME="iproute2"
+VERSION="6.10.0"
+REVISION=1
+URL="https://www.kernel.org/pub/linux/utils/net/iproute2/iproute2-${VERSION}.tar.xz"
+DEPENDS=""
+
+build() {
+    ./configure
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

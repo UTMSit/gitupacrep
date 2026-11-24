@@ -1,0 +1,36 @@
+NAME="gnupg"
+VERSION="2.4.8"
+REVISION=1
+URL="https://gnupg.org/ftp/gcrypt/gnupg/gnupg-${VERSION}.tar.bz2"
+DEPENDS="libgpg-error libgcrypt libassuan libksba npth"
+
+build() {
+    if command -v sha256sum >/dev/null 2>&1; then
+        printf '%s  ../gnupg-2.4.8.tar.bz2\n' 'b58c80d79b04d3243ff49c1c3fc6b5f83138eb3784689563bcdd060595318616' | sha256sum -c - >/dev/null
+    fi
+    DEPS=/usr
+    if [ ! -e /usr/lib/libassuan.so ] && [ -d /tmp/upac-staging-0/libassuan-3.0.2/usr ]; then
+        DEPS="$PWD/.upac-deps"
+        mkdir -p "$DEPS/bin" "$DEPS/lib/pkgconfig" "$DEPS/include"
+        for p in libgpg-error-1.61 libgcrypt-1.12.4 libassuan-3.0.2 libksba-1.9.1 npth-1.8; do
+            s="/tmp/upac-staging-0/${p}/usr"
+            [ -d "$s" ] || continue
+            cp -a "$s"/. "$DEPS"/ 2>/dev/null || true
+        done
+        export PATH="$DEPS/bin:$PATH"
+    fi
+    export PKG_CONFIG_PATH="$DEPS/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
+    export CPPFLAGS="-I$DEPS/include"
+    export LDFLAGS="-L$DEPS/lib -Wl,-rpath,/usr/lib"
+    ./configure --prefix=/usr --libdir=/usr/lib --disable-static \
+        --with-libgpg-error-prefix="$DEPS" \
+        --with-libgcrypt-prefix="$DEPS" \
+        --with-libassuan-prefix="$DEPS" \
+        --with-ksba-prefix="$DEPS" \
+        --with-npth-prefix="$DEPS"
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

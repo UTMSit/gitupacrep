@@ -1,0 +1,14 @@
+NAME="less"
+VERSION="643"
+REVISION=1
+URL="https://www.greenwoodsoftware.com/less/less-${VERSION}.tar.gz"
+DEPENDS="ncurses"
+
+build() {
+    ./configure --prefix=/usr --sysconfdir=/etc
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

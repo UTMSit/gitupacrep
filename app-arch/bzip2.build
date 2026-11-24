@@ -1,0 +1,13 @@
+NAME="bzip2"
+VERSION="1.0.8"
+REVISION=1
+URL="https://sourceware.org/pub/bzip2/bzip2-${VERSION}.tar.gz"
+DEPENDS=""
+
+build() {
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make PREFIX=/usr DESTDIR="${1}" install
+}

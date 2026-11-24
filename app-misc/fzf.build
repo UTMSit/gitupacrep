@@ -1,0 +1,19 @@
+NAME="fzf"
+VERSION="0.56.3"
+REVISION=1
+URL="https://github.com/junegunn/fzf/archive/refs/tags/v${VERSION}.tar.gz"
+DEPENDS="go"
+
+build() {
+    if command -v sha256sum >/dev/null 2>&1; then
+        printf '%s  ../v0.56.3.tar.gz\n' 'fc7bf3fcfdc3c9562237d1e82196618201a39b3fd6bf3364149516b288f5a24a' | sha256sum -c - >/dev/null
+    fi
+    go build -o fzf .
+}
+
+upac_install() {
+    install -D -m 755 fzf "${1}/usr/bin/fzf"
+    install -D -m 644 man/man1/fzf.1 "${1}/usr/share/man/man1/fzf.1"
+    install -D -m 644 man/man1/fzf-tmux.1 "${1}/usr/share/man/man1/fzf-tmux.1"
+    install -D -m 644 LICENSE "${1}/usr/share/licenses/fzf/LICENSE"
+}

@@ -1,0 +1,19 @@
+NAME="hyperfine"
+VERSION="2.0.0"
+REVISION=1
+URL="https://github.com/sharkdp/hyperfine/archive/refs/tags/v${VERSION}.tar.gz"
+DEPENDS="rust"
+
+build() {
+    if command -v sha256sum >/dev/null 2>&1; then
+        printf '%s  ../v2.0.0.tar.gz\n' 'f4b71df3c78e4cf752ca6fb6ebc4b025f7ea6a5ca5c48fea75f8a1fdb4c7d721' | sha256sum -c - >/dev/null
+    fi
+    cargo build --release --locked
+}
+
+upac_install() {
+    install -D -m 755 target/release/hyperfine "${1}/usr/bin/hyperfine"
+    install -D -m 644 doc/hyperfine.1 "${1}/usr/share/man/man1/hyperfine.1"
+    install -D -m 644 LICENSE-MIT "${1}/usr/share/licenses/hyperfine/LICENSE-MIT"
+    install -D -m 644 LICENSE-APACHE "${1}/usr/share/licenses/hyperfine/LICENSE-APACHE"
+}

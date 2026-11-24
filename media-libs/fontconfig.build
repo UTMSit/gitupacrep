@@ -1,0 +1,18 @@
+NAME="fontconfig"
+VERSION="2.15.0"
+REVISION=1
+URL="https://www.freedesktop.org/software/fontconfig/release/fontconfig-${VERSION}.tar.xz"
+DEPENDS="freetype expat"
+
+build() {
+    meson setup build \
+        --prefix=/usr \
+        --sysconfdir=/etc \
+        -Ddoc=disabled \
+        -Dtests=disabled
+    ninja -C build -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    DESTDIR="${1}" ninja -C build install
+}

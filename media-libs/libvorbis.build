@@ -1,0 +1,14 @@
+NAME="libvorbis"
+VERSION="1.3.7"
+REVISION=1
+URL="https://downloads.xiph.org/releases/vorbis/libvorbis-${VERSION}.tar.xz"
+DEPENDS="libogg"
+
+build() {
+    ./configure --prefix=/usr --disable-static
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

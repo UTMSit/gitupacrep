@@ -1,0 +1,17 @@
+NAME="ccache"
+VERSION="4.10.1"
+REVISION=1
+URL="https://github.com/ccache/ccache/releases/download/v${VERSION}/ccache-${VERSION}.tar.gz"
+DEPENDS="cmake"
+
+build() {
+    cmake -B build \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DENABLE_TESTING=OFF
+    cmake --build build -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    DESTDIR="${1}" cmake --install build
+}

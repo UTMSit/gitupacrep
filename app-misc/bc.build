@@ -1,0 +1,14 @@
+NAME="bc"
+VERSION="1.07.1"
+REVISION=1
+URL="https://ftp.gnu.org/gnu/bc/bc-${VERSION}.tar.gz"
+DEPENDS="readline"
+
+build() {
+    ./configure --prefix=/usr --with-readline
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

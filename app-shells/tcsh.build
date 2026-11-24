@@ -1,0 +1,14 @@
+NAME="tcsh"
+VERSION="6.24.07"
+REVISION=1
+URL="https://astron.com/pub/tcsh/tcsh-${VERSION}.tar.gz"
+DEPENDS="ncurses"
+
+build() {
+    ./configure --prefix=/usr
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

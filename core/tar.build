@@ -1,0 +1,14 @@
+NAME="tar"
+VERSION="1.35"
+REVISION=1
+URL="https://ftp.gnu.org/gnu/tar/tar-${VERSION}.tar.xz"
+DEPENDS=""
+
+build() {
+    ./configure --prefix=/usr --with-rmt=/usr/libexec/rmt
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

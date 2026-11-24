@@ -1,0 +1,14 @@
+NAME="socat"
+VERSION="1.7.4.4"
+REVISION=1
+URL="http://www.dest-unreach.org/socat/download/socat-${VERSION}.tar.gz"
+DEPENDS="openssl zlib"
+
+build() {
+    ./configure --prefix=/usr
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

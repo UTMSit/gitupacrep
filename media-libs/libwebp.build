@@ -1,0 +1,25 @@
+NAME="libwebp"
+VERSION="1.4.0"
+REVISION=1
+URL="https://github.com/webmproject/libwebp/archive/refs/tags/v${VERSION}.tar.gz"
+DEPENDS=""
+
+build() {
+    cmake -B build \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DWEBP_BUILD_ANIM_UTILS=OFF \
+        -DWEBP_BUILD_CWEBP=OFF \
+        -DWEBP_BUILD_DWEBP=OFF \
+        -DWEBP_BUILD_GIF=OFF \
+        -DWEBP_BUILD_IMG=OFF \
+        -DWEBP_BUILD_VWEBP=OFF \
+        -DWEBP_BUILD_WEBPINFO=OFF \
+        -DWEBP_BUILD_WEBPMUX=OFF \
+        -DWEBP_BUILD_EXTRAS=OFF
+    cmake --build build -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    DESTDIR="${1}" cmake --install build
+}

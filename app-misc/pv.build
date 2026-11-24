@@ -1,0 +1,17 @@
+NAME="pv"
+VERSION="1.12.7"
+REVISION=1
+URL="https://deb.debian.org/debian/pool/main/p/pv/pv_${VERSION}.orig.tar.gz"
+DEPENDS=""
+
+build() {
+    if command -v sha256sum >/dev/null 2>&1; then
+        printf '%s  ../pv_1.12.7.orig.tar.gz\n' 'a8ac7272ad48b1c82a10f0a69caca838e6483972317e40a6800725c300028106' | sha256sum -c - >/dev/null
+    fi
+    ./configure --prefix=/usr
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

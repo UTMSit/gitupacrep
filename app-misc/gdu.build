@@ -1,0 +1,20 @@
+NAME="gdu"
+VERSION="5.39.0"
+REVISION=1
+URL="https://github.com/dundee/gdu/archive/refs/tags/v${VERSION}.tar.gz"
+DEPENDS="go"
+
+build() {
+    if command -v sha256sum >/dev/null 2>&1; then
+        printf '%s  ../v5.39.0.tar.gz\n' '1ee1bfacb8771ba8bf094f0f8be31f2749066882a2f1f73360c664d82bba6e4a' | sha256sum -c - >/dev/null
+    fi
+    go build -trimpath \
+        -ldflags "-s -w -X 'github.com/dundee/gdu/v5/build.Version=5.39.0'" \
+        -o gdu ./cmd/gdu
+}
+
+upac_install() {
+    install -D -m 755 gdu "${1}/usr/bin/gdu"
+    install -D -m 644 gdu.1 "${1}/usr/share/man/man1/gdu.1"
+    install -D -m 644 LICENSE.md "${1}/usr/share/licenses/gdu/LICENSE.md"
+}

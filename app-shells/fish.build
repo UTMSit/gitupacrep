@@ -1,0 +1,17 @@
+NAME="fish"
+VERSION="3.7.1"
+REVISION=1
+URL="https://github.com/fish-shell/fish-shell/releases/download/${VERSION}/fish-${VERSION}.tar.xz"
+DEPENDS="ncurses"
+
+build() {
+    cmake -B build \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DBUILD_DOCS=OFF
+    cmake --build build -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    DESTDIR="${1}" cmake --install build
+}

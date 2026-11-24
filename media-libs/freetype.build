@@ -1,0 +1,14 @@
+NAME="freetype"
+VERSION="2.13.3"
+REVISION=1
+URL="https://download.savannah.gnu.org/releases/freetype/freetype-${VERSION}.tar.xz"
+DEPENDS="zlib libpng"
+
+build() {
+    ./configure --prefix=/usr --without-harfbuzz
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

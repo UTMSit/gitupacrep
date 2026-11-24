@@ -1,0 +1,14 @@
+NAME="sed"
+VERSION="4.9"
+REVISION=1
+URL="https://ftp.gnu.org/gnu/sed/sed-${VERSION}.tar.xz"
+DEPENDS=""
+
+build() {
+    ./configure --prefix=/usr
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

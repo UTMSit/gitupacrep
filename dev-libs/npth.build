@@ -1,0 +1,17 @@
+NAME="npth"
+VERSION="1.8"
+REVISION=1
+URL="https://gnupg.org/ftp/gcrypt/npth/npth-${VERSION}.tar.bz2"
+DEPENDS=""
+
+build() {
+    if command -v sha256sum >/dev/null 2>&1; then
+        printf '%s  ../npth-1.8.tar.bz2\n' '8bd24b4f23a3065d6e5b26e98aba9ce783ea4fd781069c1b35d149694e90ca3e' | sha256sum -c - >/dev/null
+    fi
+    ./configure --prefix=/usr --libdir=/usr/lib --disable-static
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

@@ -1,0 +1,14 @@
+NAME="automake"
+VERSION="1.16.5"
+REVISION=1
+URL="https://ftp.gnu.org/gnu/automake/automake-${VERSION}.tar.xz"
+DEPENDS="autoconf perl"
+
+build() {
+    ./configure --prefix=/usr
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

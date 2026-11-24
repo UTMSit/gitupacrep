@@ -1,0 +1,21 @@
+NAME="ffmpeg"
+VERSION="6.1.1"
+REVISION=1
+URL="https://ffmpeg.org/releases/ffmpeg-${VERSION}.tar.xz"
+DEPENDS="zlib"
+
+build() {
+    ./configure \
+        --prefix=/usr \
+        --disable-static \
+        --enable-shared \
+        --disable-doc \
+        --disable-debug \
+        --disable-x86asm \
+        --enable-zlib
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

@@ -1,0 +1,20 @@
+NAME="libuv"
+VERSION="1.48.0"
+REVISION=1
+URL="https://github.com/libuv/libuv/archive/refs/tags/v${VERSION}.tar.gz"
+DEPENDS=""
+
+build() {
+    mkdir -p build && cd build
+    cmake .. \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DBUILD_TESTING=OFF
+    make -j${UPAC_JOBS:-4}
+    cd ..
+}
+
+upac_install() {
+    cd build
+    make DESTDIR="${1}" install
+}

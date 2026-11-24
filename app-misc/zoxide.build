@@ -1,0 +1,20 @@
+NAME="zoxide"
+VERSION="0.10.0"
+REVISION=1
+URL="https://github.com/ajeetdsouza/zoxide/archive/refs/tags/v${VERSION}.tar.gz"
+DEPENDS="rust"
+
+build() {
+    if command -v sha256sum >/dev/null 2>&1; then
+        printf '%s  ../v0.10.0.tar.gz\n' '4fcd4272b013a10b637dbcc299c58a9924b94470a9042677ca1a204cc2e9150e' | sha256sum -c - >/dev/null
+    fi
+    cargo build --release --locked
+}
+
+upac_install() {
+    install -D -m 755 target/release/zoxide "${1}/usr/bin/zoxide"
+    install -D -m 644 LICENSE "${1}/usr/share/licenses/zoxide/LICENSE"
+    for m in man/man1/*.1; do
+        install -D -m 644 "${m}" "${1}/usr/share/man/man1/${m##*/}"
+    done
+}

@@ -1,0 +1,14 @@
+NAME="perl"
+VERSION="5.38.2"
+REVISION=1
+URL="https://www.cpan.org/src/5.0/perl-${VERSION}.tar.gz"
+DEPENDS="zlib"
+
+build() {
+    ./configure -des -Dprefix=/usr -Duseshrplib -Dlibperl=libperl.so
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

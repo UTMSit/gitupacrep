@@ -1,0 +1,18 @@
+NAME="zsh"
+VERSION="5.9"
+REVISION=1
+URL="https://downloads.sourceforge.net/project/zsh/zsh/${VERSION}/zsh-${VERSION}.tar.xz"
+DEPENDS="ncurses"
+
+build() {
+    ./configure \
+        --prefix=/usr \
+        --sysconfdir=/etc \
+        --with-curses=ncurses \
+        --enable-multibyte
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

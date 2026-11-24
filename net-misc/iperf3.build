@@ -1,0 +1,17 @@
+NAME="iperf3"
+VERSION="3.22.1"
+REVISION=1
+URL="https://downloads.es.net/pub/iperf/iperf-${VERSION}.tar.gz"
+DEPENDS=""
+
+build() {
+    if command -v sha256sum >/dev/null 2>&1; then
+        printf '%s  ../iperf-3.22.1.tar.gz\n' 'de018b5252e2a7068c89fac8b35a295d83334f2b7814aa9532a2a8107b04a4a9' | sha256sum -c - >/dev/null
+    fi
+    ./configure --prefix=/usr
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

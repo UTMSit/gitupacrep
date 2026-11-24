@@ -1,0 +1,14 @@
+NAME="flac"
+VERSION="1.4.3"
+REVISION=1
+URL="https://downloads.xiph.org/releases/flac/flac-${VERSION}.tar.xz"
+DEPENDS="libogg"
+
+build() {
+    ./configure --prefix=/usr --disable-static --disable-examples
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

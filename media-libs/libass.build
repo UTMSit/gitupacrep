@@ -1,0 +1,14 @@
+NAME="libass"
+VERSION="0.17.3"
+REVISION=1
+URL="https://github.com/libass/libass/releases/download/${VERSION}/libass-${VERSION}.tar.xz"
+DEPENDS="freetype fontconfig harfbuzz fribidi expat"
+
+build() {
+    ./configure --prefix=/usr --disable-static
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

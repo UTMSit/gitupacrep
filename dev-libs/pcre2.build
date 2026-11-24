@@ -1,0 +1,17 @@
+NAME="pcre2"
+VERSION="10.44"
+REVISION=1
+URL="https://github.com/PCRE2Project/pcre2/releases/download/pcre2-${VERSION}/pcre2-${VERSION}.tar.gz"
+DEPENDS=""
+
+build() {
+    ./configure \
+        --prefix=/usr \
+        --enable-jit \
+        --disable-static
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

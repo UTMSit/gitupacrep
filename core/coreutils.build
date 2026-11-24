@@ -1,0 +1,14 @@
+NAME="coreutils"
+VERSION="9.5"
+REVISION=1
+URL="https://ftp.gnu.org/gnu/coreutils/coreutils-${VERSION}.tar.xz"
+DEPENDS=""
+
+build() {
+    ./configure --prefix=/usr --enable-no-install-program=kill,uptime
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

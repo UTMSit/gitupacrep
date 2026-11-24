@@ -1,0 +1,14 @@
+NAME="busybox"
+VERSION="1.36.1"
+REVISION=1
+URL="https://busybox.net/downloads/busybox-${VERSION}.tar.bz2"
+DEPENDS=""
+
+build() {
+    make defconfig
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make CONFIG_PREFIX="${1}" install
+}

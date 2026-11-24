@@ -1,0 +1,18 @@
+NAME="procps"
+VERSION="4.0.4"
+REVISION=1
+URL="https://deb.debian.org/debian/pool/main/p/procps/procps_${VERSION}.orig.tar.xz"
+DEPENDS="ncurses"
+
+build() {
+    ./configure \
+        --prefix=/usr \
+        --sysconfdir=/etc \
+        --without-systemd \
+        --with-ncurses
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

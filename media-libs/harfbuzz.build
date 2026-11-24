@@ -1,0 +1,18 @@
+NAME="harfbuzz"
+VERSION="9.0.0"
+REVISION=1
+URL="https://github.com/harfbuzz/harfbuzz/releases/download/${VERSION}/harfbuzz-${VERSION}.tar.xz"
+DEPENDS="freetype glib"
+
+build() {
+    meson setup build \
+        --prefix=/usr \
+        -Dtests=disabled \
+        -Ddocs=disabled \
+        -Dintrospection=disabled
+    ninja -C build -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    DESTDIR="${1}" ninja -C build install
+}

@@ -1,0 +1,19 @@
+NAME="dmidecode"
+VERSION="3.6"
+REVISION=1
+URL="https://download-mirror.savannah.gnu.org/releases/dmidecode/dmidecode-${VERSION}.tar.xz"
+DEPENDS=""
+
+build() {
+    if command -v sha256sum >/dev/null 2>&1; then
+        printf '%s  ../dmidecode-3.6.tar.xz\n' 'e40c65f3ec3dafe31ad8349a4ef1a97122d38f65004ed66575e1a8d575dd8bae' | sha256sum -c - >/dev/null
+    fi
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    for p in dmidecode biosdecode ownership vpddecode; do
+        install -D -m 755 "${p}" "${1}/usr/sbin/${p}"
+        install -D -m 644 "man/${p}.8" "${1}/usr/share/man/man8/${p}.8"
+    done
+}

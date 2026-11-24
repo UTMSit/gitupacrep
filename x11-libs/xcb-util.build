@@ -1,0 +1,14 @@
+NAME="xcb-util"
+VERSION="0.4.1"
+REVISION=1
+URL="https://xcb.freedesktop.org/dist/xcb-util-${VERSION}.tar.gz"
+DEPENDS="libxcb xorgproto xcb-proto"
+
+build() {
+    ./configure --prefix=/usr --disable-static
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

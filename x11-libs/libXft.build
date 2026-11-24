@@ -1,0 +1,14 @@
+NAME="libXft"
+VERSION="2.3.8"
+REVISION=1
+URL="https://www.x.org/archive/individual/lib/libXft-${VERSION}.tar.xz"
+DEPENDS="freetype fontconfig libX11 libXrender"
+
+build() {
+    ./configure --prefix=/usr --disable-static
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

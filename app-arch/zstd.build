@@ -1,0 +1,31 @@
+NAME="zstd"
+VERSION="1.6.0"
+REVISION=1
+URL="https://github.com/facebook/zstd/releases/download/v${VERSION}/zstd-${VERSION}.tar.gz"
+DEPENDS=""
+
+build() {
+    if command -v sha256sum >/dev/null 2>&1; then
+        printf '%s  ../zstd-1.6.0.tar.gz\n' '2ba599ae2a257976278e7e71e998433a387bfd18aa7b78678229fd5d84f5e9b8' | sha256sum -c - >/dev/null
+    fi
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    install -D -m 755 programs/zstd "${1}/usr/bin/zstd"
+    ln -sf zstd "${1}/usr/bin/zstdcat"
+    ln -sf zstd "${1}/usr/bin/unzstd"
+    install -D -m 755 programs/zstdgrep "${1}/usr/bin/zstdgrep"
+    install -D -m 755 programs/zstdless "${1}/usr/bin/zstdless"
+    install -D -m 644 lib/libzstd.so.1.6.0 "${1}/usr/lib/libzstd.so.1.6.0"
+    ln -sf libzstd.so.1.6.0 "${1}/usr/lib/libzstd.so.1"
+    ln -sf libzstd.so.1.6.0 "${1}/usr/lib/libzstd.so"
+    install -D -m 644 lib/libzstd.a "${1}/usr/lib/libzstd.a"
+    install -D -m 644 lib/libzstd.pc "${1}/usr/lib/pkgconfig/libzstd.pc"
+    for h in zstd.h zstd_errors.h zdict.h; do
+        install -D -m 644 "lib/${h}" "${1}/usr/include/${h}"
+    done
+    for m in zstd zstdgrep zstdless; do
+        install -D -m 644 "programs/${m}.1" "${1}/usr/share/man/man1/${m}.1"
+    done
+}

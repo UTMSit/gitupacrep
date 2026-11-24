@@ -1,0 +1,17 @@
+NAME="libassuan"
+VERSION="3.0.2"
+REVISION=1
+URL="https://gnupg.org/ftp/gcrypt/libassuan/libassuan-${VERSION}.tar.bz2"
+DEPENDS="libgpg-error"
+
+build() {
+    if command -v sha256sum >/dev/null 2>&1; then
+        printf '%s  ../libassuan-3.0.2.tar.bz2\n' 'd2931cdad266e633510f9970e1a2f346055e351bb19f9b78912475b8074c36f6' | sha256sum -c - >/dev/null
+    fi
+    ./configure --prefix=/usr --libdir=/usr/lib --with-libgpg-error-prefix=/usr --disable-static
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

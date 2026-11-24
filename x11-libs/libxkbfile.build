@@ -1,0 +1,14 @@
+NAME="libxkbfile"
+VERSION="1.1.3"
+REVISION=1
+URL="https://www.x.org/archive/individual/lib/libxkbfile-${VERSION}.tar.xz"
+DEPENDS="libX11 xkbcommon xorgproto"
+
+build() {
+    ./configure --prefix=/usr --disable-static
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

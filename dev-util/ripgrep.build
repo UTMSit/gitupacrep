@@ -1,0 +1,18 @@
+NAME="ripgrep"
+VERSION="14.1.0"
+REVISION=1
+URL="https://github.com/BurntSushi/ripgrep/archive/refs/tags/${VERSION}.tar.gz"
+DEPENDS="rust"
+
+build() {
+    if command -v sha256sum >/dev/null 2>&1; then
+        printf '%s  ../14.1.0.tar.gz\n' '33c6169596a6bbfdc81415910008f26e0809422fda2d849562637996553b2ab6' | sha256sum -c - >/dev/null
+    fi
+    cargo build --release --locked
+}
+
+upac_install() {
+    install -D -m 755 target/release/rg "${1}/usr/bin/rg"
+    install -D -m 644 LICENSE-MIT "${1}/usr/share/licenses/ripgrep/LICENSE-MIT"
+    install -D -m 644 UNLICENSE "${1}/usr/share/licenses/ripgrep/UNLICENSE"
+}

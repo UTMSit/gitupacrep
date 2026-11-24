@@ -1,0 +1,17 @@
+NAME="lua"
+VERSION="5.4.6"
+REVISION=1
+URL="https://www.lua.org/ftp/lua-${VERSION}.tar.gz"
+DEPENDS="readline"
+
+build() {
+    make linux MYLIBS="-lreadline -lncurses -ldl" -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    mkdir -p "${1}/usr/bin" "${1}/usr/include" "${1}/usr/lib" "${1}/usr/share/man/man1"
+    install -m 755 src/lua src/luac "${1}/usr/bin/"
+    install -m 644 src/lua.h src/lualib.h src/lauxlib.h src/luaconf.h "${1}/usr/include/"
+    install -m 644 src/liblua.a "${1}/usr/lib/"
+    install -m 644 doc/lua.1 doc/luac.1 "${1}/usr/share/man/man1/"
+}

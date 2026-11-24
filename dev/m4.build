@@ -1,0 +1,14 @@
+NAME="m4"
+VERSION="1.4.19"
+REVISION=1
+URL="https://ftp.gnu.org/gnu/m4/m4-${VERSION}.tar.xz"
+DEPENDS=""
+
+build() {
+    ./configure --prefix=/usr
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

@@ -1,0 +1,19 @@
+NAME="gdb"
+VERSION="14.2"
+REVISION=1
+URL="https://ftp.gnu.org/gnu/gdb/gdb-${VERSION}.tar.xz"
+DEPENDS=""
+
+build() {
+    ./configure \
+        --prefix=/usr \
+        --with-system-zlib \
+        --without-python \
+        --without-guile \
+        --disable-tui
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}
