@@ -38,12 +38,12 @@ sh build.sh
 python3 comrun7-install.py
 ```
 
-`upac -u` refreshes the package database from the same repository. Do not use
-`upac ogr:core/comrun7-installer` until the corrected package recipe is
-available from the remote repository; the old recipe tries to rebuild Python
-and its dependencies. If the LiveCD has no network, copy the
-`core/comrun7-installer` directory onto other media, mount it in the live
-system, and run `sh build.sh` there.
+`upac -u` refreshes the package database from the same repository. The package
+can also be installed directly with `upac ogr:core/comrun7-installer`; its
+recipe keeps `DEPENDS` empty because Python 3 and the compiler are already in
+the LiveCD. If the LiveCD has no network, copy the `core/comrun7-installer`
+directory onto other media, mount it in the live system, and run `sh build.sh`
+there.
 
 ## 1. Scripted install (recommended)
 
