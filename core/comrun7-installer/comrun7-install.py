@@ -44,6 +44,16 @@ def shq(value):
     return shlex.quote(str(value))
 
 
+def parse_yes_no(value, default=None):
+    """Accept ordinary yes/no spellings; return default when unrecognised."""
+    text = str(value).strip().lower()
+    if text in ("y", "yes", "1", "true", "on"):
+        return True
+    if text in ("n", "no", "0", "false", "off"):
+        return False
+    return default
+
+
 def run(cmd, input_text=None, check=True):
     return subprocess.run(
         cmd,
@@ -67,16 +77,16 @@ def hash_password(password):
 
 def list_disks():
     try:
-        out = run(["lsblk", "-d", "-n", "-o", "NAME,SIZE,TYPE,MODEL"]).stdout
+        out = run(["lsblk", "-d", "-n", "-o", "NAME,SIZE,TYPE,RM,MODEL"]).stdout
     except Exception:
         out = ""
     disks = []
     for line in out.splitlines():
-        parts = line.split(None, 3)
-        if len(parts) < 3:
+        parts = line.split(None, 4)
+        if len(parts) < 4:
             continue
-        name, size, dtype = parts[0], parts[1], parts[2]
-        model = parts[3] if len(parts) > 3 else ""
+        name, size, dtype, removable = parts[0], parts[1], parts[2], parts[3]
+        model = parts[4] if len(parts) > 4 else ""
         if dtype != "disk":
             continue
         if not (name.startswith(("sd", "hd", "vd", "nvme"))):
@@ -85,6 +95,7 @@ def list_disks():
             "dev": "/dev/" + name,
             "size": size,
             "model": model.strip() or "unknown model",
+            "removable": removable.strip() == "1",
         })
     return disks
 
@@ -150,17 +161,24 @@ def frame(stdscr, title, footer="Up/Down move  Enter select  Esc back"):
 
 def menu(stdscr, title, items, selected=0, footer=None):
     """Return selected index, or None when cancelled."""
+    if not items:
+        return None
     idx = selected
+    # Draw the chrome once. Redraw only the menu rows on each key so the
+    # screen does not flash on every arrow press.
+    frame(stdscr, title, footer or "Up/Down move  Enter select  Esc cancel")
     while True:
-        frame(stdscr, title, footer or "Up/Down move  Enter select  Esc cancel")
         top = 3
         maxrows = max(1, curses.LINES - 6)
         start = max(0, idx - maxrows + 1)
-        for pos, item in enumerate(items[start:start + maxrows]):
+        for pos in range(maxrows):
             y = top + pos
-            label = item if isinstance(item, str) else item[0]
-            attr = curses.A_REVERSE if pos + start == idx else curses.A_NORMAL
-            put(stdscr, y, 3, label, attr)
+            clear_line(stdscr, y, 3)
+            if pos < len(items[start:start + maxrows]):
+                item = items[start + pos]
+                label = item if isinstance(item, str) else item[0]
+                attr = curses.A_REVERSE if start + pos == idx else curses.A_NORMAL
+                put(stdscr, y, 3, label, attr)
         stdscr.refresh()
         ch = stdscr.getch()
         if ch in (curses.KEY_UP, ord("k")):
@@ -176,9 +194,9 @@ def menu(stdscr, title, items, selected=0, footer=None):
 def text_prompt(stdscr, title, prompt, initial="", masked=False):
     """Return entered string, or None when cancelled."""
     value = list(initial)
+    frame(stdscr, title, "Enter accept  Esc cancel")
+    put(stdscr, 4, 3, prompt + ": ")
     while True:
-        frame(stdscr, title, "Enter accept  Esc cancel")
-        put(stdscr, 4, 3, prompt + ": ")
         shown = "*" * len(value) if masked else "".join(value)
         clear_line(stdscr, 5, 3)
         put(stdscr, 5, 3, shown + "_", curses.A_UNDERLINE)
@@ -197,21 +215,30 @@ def text_prompt(stdscr, title, prompt, initial="", masked=False):
             value.append(chr(ch))
 
 
-def form(stdscr, title, fields, footer="Up/Down field  Enter accept  Esc cancel"):
-    """fields: list of (label, initial_value, masked_bool). Returns dict or None."""
+def form(stdscr, title, fields, footer="Up/Down field  Enter accept  Esc cancel",
+         back=False):
+    """fields: list of (label, initial_value, masked_bool).
+
+    Returns a dict, None when cancelled, or "__back__" on Esc when back=True.
+    """
     values = [list(v) for _l, v, _m in fields]
     idx = 0
+    # Chrome and labels are static; only value rows need redrawing.
+    frame(stdscr, title, footer)
+    for n, (label, _initial, _masked) in enumerate(fields):
+        y = 3 + n * 2
+        if y >= curses.LINES - 3:
+            break
+        put(stdscr, y, 3, label + ": ")
     while True:
-        frame(stdscr, title, footer)
-        for n, (label, _initial, masked) in enumerate(fields):
-            y = 3 + n * 2
+        for n, (_label, _initial, masked) in enumerate(fields):
+            y = 3 + n * 2 + 1
             if y >= curses.LINES - 3:
                 break
-            put(stdscr, y, 3, label + ": ")
             shown = "*" * len(values[n]) if masked else "".join(values[n])
-            clear_line(stdscr, y + 1, 3)
+            clear_line(stdscr, y, 3)
             attr = curses.A_UNDERLINE if n == idx else curses.A_NORMAL
-            put(stdscr, y + 1, 3, shown + ("_" if n == idx else ""), attr)
+            put(stdscr, y, 3, shown + ("_" if n == idx else ""), attr)
         stdscr.refresh()
         ch = stdscr.getch()
         if ch in (curses.KEY_UP,):
@@ -221,7 +248,7 @@ def form(stdscr, title, fields, footer="Up/Down field  Enter accept  Esc cancel"
         elif ch in (10, 13, curses.KEY_ENTER):
             return {fields[n][0]: "".join(values[n]) for n in range(len(fields))}
         elif ch == 27:
-            return None
+            return "__back__" if back else None
         elif ch in (curses.KEY_BACKSPACE, 127, 8):
             if values[idx]:
                 values[idx].pop()
@@ -327,16 +354,16 @@ def edit_users(stdscr, cfg):
         for u in cfg.users:
             items.append("%-16s %-22s %s" % (u["name"], u["home"], u["groups"]))
         items += ["[Add user]", "[Done]"]
-        choice = menu(stdscr, "Users", items, footer="Up/Down move  Enter select  Esc done")
+        choice = menu(stdscr, "Users", items, footer="Up/Down move  Enter select  Esc back")
         if choice is None:
-            return
+            return False
         if choice == len(cfg.users):
             user = new_user(stdscr, [u["name"] for u in cfg.users])
             if user:
                 cfg.users.append(user)
             continue
         if choice > len(cfg.users):
-            return
+            return True
         # Selected an existing user: offer delete or password change.
         sub = menu(stdscr, "User " + cfg.users[choice]["name"],
                    ["Change password", "Delete user", "Back"])
@@ -350,7 +377,7 @@ def edit_users(stdscr, cfg):
         elif sub == 1:
             del cfg.users[choice]
         elif sub is None:
-            return
+            continue
 
 
 def root_password_screen(stdscr, cfg):
@@ -450,6 +477,7 @@ def install(stdscr, cfg):
 
     frame(stdscr, "Installing comrun7", "Do not power off.  Installing to " + cfg.disk)
     put(stdscr, 3, 3, "Starting installer...")
+    put(stdscr, 4, 3, "Working... (Ctrl-C not recommended)")
     stdscr.refresh()
 
     try:
@@ -484,9 +512,12 @@ def install(stdscr, cfg):
                 log_lines = log_lines[-200:]
         elif proc.poll() is not None:
             break
-        frame(stdscr, "Installing comrun7", "Working... (Ctrl-C not recommended)")
+        # Keep the chrome fixed and refresh only the log rows.
+        visible = max(1, curses.LINES - 7)
         put(stdscr, 3, 3, "Target: " + cfg.disk)
-        for n, line in enumerate(log_lines[-max(1, curses.LINES - 7):]):
+        for n in range(visible):
+            clear_line(stdscr, 5 + n, 3)
+        for n, line in enumerate(log_lines[-visible:]):
             put(stdscr, 5 + n, 3, line[:max(0, curses.COLS - 6)])
         stdscr.refresh()
     rc = proc.wait()
@@ -514,17 +545,22 @@ def summary_screen(stdscr, cfg):
         ("Root password", cfg.root_mode),
         ("Users", ", ".join(u["name"] for u in cfg.users) or "(none)"),
     ]
-    frame(stdscr, "Review and install", "Enter start install  Esc go back")
-    for n, (label, value) in enumerate(lines):
-        put(stdscr, 3 + n, 3, "%-18s %s" % (label, value))
-        clear_line(stdscr, 3 + n, 24)
-        put(stdscr, 3 + n, 24, value)
-    y = 5 + len(lines)
-    put(stdscr, y, 3, "Type YES to confirm:", curses.A_BOLD)
-    answer = text_prompt(stdscr, "Final confirmation", "Type YES", initial="")
-    if answer is None or answer != "YES":
-        return False
-    return install(stdscr, cfg)
+    while True:
+        frame(stdscr, "Review and install", "Enter start install  Esc go back")
+        for n, (label, value) in enumerate(lines):
+            put(stdscr, 3 + n, 3, "%-18s %s" % (label, value))
+            clear_line(stdscr, 3 + n, 24)
+            put(stdscr, 3 + n, 24, value)
+        y = 5 + len(lines)
+        put(stdscr, y, 3, "Type YES to confirm:", curses.A_BOLD)
+        answer = text_prompt(stdscr, "Final confirmation", "Type YES", initial="")
+        if answer is None:
+            return False
+        if answer != "YES":
+            message(stdscr, "Not confirmed",
+                    "Type YES exactly (upper case) to start. Nothing was written.")
+            continue
+        return install(stdscr, cfg)
 
 
 # ---------------------------------------------------------------------------
@@ -555,55 +591,97 @@ def main(stdscr):
     if stdscr.getch() in (27,):
         return
 
-    disks = list_disks()
-    if not disks:
-        message(stdscr, "No disks", "No installable disk was found.")
-        return
-    choice = menu(stdscr, "Select target disk",
-                  ["%s  %s  %s" % (d["dev"], d["size"], d["model"]) for d in disks],
-                  footer="Up/Down move  Enter select  Esc exit")
-    if choice is None:
-        return
-    cfg.disk = disks[choice]["dev"]
+    # Linear flow with real back navigation: every step can return to the one
+    # before it instead of dropping straight out of the installer.
+    step = 1
+    while step <= 5:
+        if step == 1:
+            disks = list_disks()
+            if not disks:
+                message(stdscr, "No disks", "No installable disk was found.")
+                return
+            labels = []
+            for d in disks:
+                marker = "  [USB/removable - CAREFUL]" if d["removable"] else ""
+                labels.append("%s  %s  %s%s" % (d["dev"], d["size"], d["model"], marker))
+            choice = menu(stdscr, "Select target disk", labels,
+                          footer="Up/Down move  Enter select  Esc exit")
+            if choice is None:
+                return
+            cfg.disk = disks[choice]["dev"]
+            if disks[choice]["removable"]:
+                message(stdscr, "Removable disk selected",
+                        "You chose %s, which the kernel reports as removable "
+                        "(USB media). Installing there erases the boot stick. "
+                        "Pick another disk unless that is really intended." % cfg.disk)
+            step = 2
+            continue
 
-    data = form(stdscr, "System identity", [
-        ("Hostname", cfg.hostname, False),
-        ("Locale", cfg.locale, False),
-        ("Keymap", cfg.keymap, False),
-        ("Timezone", cfg.timezone, False),
-    ])
-    if data is None:
-        return
-    cfg.hostname = data["Hostname"].strip() or "comrun7"
-    cfg.locale = data["Locale"].strip() or "C.UTF-8"
-    cfg.keymap = data["Keymap"].strip() or "us"
-    cfg.timezone = data["Timezone"].strip() or "UTC"
+        if step == 2:
+            data = form(stdscr, "System identity", [
+                ("Hostname", cfg.hostname, False),
+                ("Locale", cfg.locale, False),
+                ("Keymap", cfg.keymap, False),
+                ("Timezone", cfg.timezone, False),
+            ], back=True)
+            if data == "__back__":
+                step = 1
+                continue
+            if data is None:
+                return
+            cfg.hostname = data["Hostname"].strip() or "comrun7"
+            cfg.locale = data["Locale"].strip() or "C.UTF-8"
+            cfg.keymap = data["Keymap"].strip() or "us"
+            cfg.timezone = data["Timezone"].strip() or "UTC"
+            step = 3
+            continue
 
-    while True:
-        edit_users(stdscr, cfg)
-        if root_password_screen(stdscr, cfg):
-            break
+        if step == 3:
+            if not edit_users(stdscr, cfg):
+                step = 2
+                continue
+            if not root_password_screen(stdscr, cfg):
+                step = 2
+                continue
+            step = 4
+            continue
 
-    data = form(stdscr, "Disk layout", [
-        ("EFI partition size (MiB)", cfg.efi_size, False),
-        ("Swap size (MiB, 0 = none)", cfg.swap_size, False),
-        ("Install BIOS GRUB (1/0)", "1" if cfg.bios_grub else "0", False),
-        ("Add serial GRUB entry (1/0)", "1" if cfg.serial_entry else "0", False),
-    ])
-    if data is None:
-        return
-    cfg.efi_size = data["EFI partition size (MiB)"] or "512"
-    cfg.swap_size = data["Swap size (MiB, 0 = none)"] or "0"
-    cfg.bios_grub = data["Install BIOS GRUB (1/0)"] == "1"
-    cfg.serial_entry = data["Add serial GRUB entry (1/0)"] == "1"
+        if step == 4:
+            while True:
+                data = form(stdscr, "Disk layout", [
+                    ("EFI partition size (MiB)", cfg.efi_size, False),
+                    ("Swap size (MiB, 0 = none)", cfg.swap_size, False),
+                    ("Install BIOS GRUB (yes/no)",
+                     "yes" if cfg.bios_grub else "no", False),
+                    ("Add serial GRUB entry (yes/no)",
+                     "yes" if cfg.serial_entry else "no", False),
+                ], back=True)
+                if data == "__back__":
+                    step = 3
+                    break
+                if data is None:
+                    return
+                efi = data["EFI partition size (MiB)"].strip()
+                swap = data["Swap size (MiB, 0 = none)"].strip()
+                bios = parse_yes_no(data["Install BIOS GRUB (yes/no)"])
+                serial = parse_yes_no(data["Add serial GRUB entry (yes/no)"])
+                if (not efi.isdigit() or not swap.isdigit()
+                        or bios is None or serial is None):
+                    message(stdscr, "Invalid layout",
+                            "Sizes must be numbers and GRUB choices must be "
+                            "yes or no. Nothing was written.")
+                    continue
+                cfg.efi_size = efi or "512"
+                cfg.swap_size = swap or "0"
+                cfg.bios_grub = bios
+                cfg.serial_entry = serial
+                step = 5
+                break
+            continue
 
-    while True:
-        done = summary_screen(stdscr, cfg)
-        if done:
+        if summary_screen(stdscr, cfg):
             return
-        sub = menu(stdscr, "Installation complete?", ["Review again", "Exit"])
-        if sub is None or sub == 1:
-            return
+        step = 4
 
 
 def selftest():
