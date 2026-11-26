@@ -328,13 +328,15 @@ def edit_users(stdscr, cfg):
             items.append("%-16s %-22s %s" % (u["name"], u["home"], u["groups"]))
         items += ["[Add user]", "[Done]"]
         choice = menu(stdscr, "Users", items, footer="Up/Down move  Enter select  Esc done")
-        if choice is None or choice >= len(cfg.users):
+        if choice is None:
             return
         if choice == len(cfg.users):
             user = new_user(stdscr, [u["name"] for u in cfg.users])
             if user:
                 cfg.users.append(user)
             continue
+        if choice > len(cfg.users):
+            return
         # Selected an existing user: offer delete or password change.
         sub = menu(stdscr, "User " + cfg.users[choice]["name"],
                    ["Change password", "Delete user", "Back"])

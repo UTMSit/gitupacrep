@@ -25,26 +25,31 @@ The selected disk is erased. Double-check `DEV` before pressing Enter.
 | `install.conf.example` | Example non-interactive install profile |
 | `build.sh` | Compiles the hash helper and checks the runtime |
 
-## Install the package from a booted LiveCD
+## Get the installer from a booted LiveCD
 
-The LiveCD already has Python 3 with `curses` and the disk/GRUB tools, but it
-does not carry these scripts or the hash helper.
+The LiveCD already has Python 3 with `curses`, a compiler, and the disk/GRUB
+tools, but it does not carry these scripts or the hash helper. Clone this
+repository and run the TUI directly from the checkout:
 
 ```sh
-upac -u
-upac ogr:core/comrun7-installer
+git clone --depth 1 https://github.com/UTMSit/gitupacrep /tmp/gitupacrep
+cd /tmp/gitupacrep/core/comrun7-installer
+sh build.sh
+python3 comrun7-install.py
 ```
 
-This installs the bundle to `/usr/share/comrun7-installer` and creates
-`/usr/bin/comrun7-install`. If the LiveCD has no network, copy the
-`core/comrun7-installer` directory from this repository onto other media,
-mount it in the live system, and run `sh build.sh` there.
+`upac -u` refreshes the package database from the same repository. Do not use
+`upac ogr:core/comrun7-installer` until the corrected package recipe is
+available from the remote repository; the old recipe tries to rebuild Python
+and its dependencies. If the LiveCD has no network, copy the
+`core/comrun7-installer` directory onto other media, mount it in the live
+system, and run `sh build.sh` there.
 
 ## 1. Scripted install (recommended)
 
 ```sh
-comrun7-install
-# or: python3 /usr/share/comrun7-installer/comrun7-install.py
+python3 comrun7-install.py
+# after installing the package manually: comrun7-install
 ```
 
 The TUI asks for:

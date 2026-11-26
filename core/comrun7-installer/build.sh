@@ -14,10 +14,11 @@ if "$CC" $CFLAGS -o comrun7-hashpw hashpw.c -lcrypt 2>/dev/null; then
 else
     cryptlib=""
     for candidate in \
+        /usr/lib64/libcrypt.so.2 /usr/lib64/libcrypt.so.1 \
         /lib64/libcrypt.so.2 /lib/libcrypt.so.2 \
-        /usr/lib64/libcrypt.so.2 /usr/lib/libcrypt.so.2 \
+        /usr/lib/libcrypt.so.2 \
         /lib64/libcrypt.so.1 /lib/libcrypt.so.1 \
-        /usr/lib64/libcrypt.so.1 /usr/lib/libcrypt.so.1; do
+        /usr/lib/libcrypt.so.1; do
         if [ -e "$candidate" ]; then
             cryptlib="$candidate"
             break

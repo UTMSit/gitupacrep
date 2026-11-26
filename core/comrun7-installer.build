@@ -2,7 +2,9 @@ NAME=comrun7-installer
 VERSION=1
 REVISION=1
 URL=https://github.com/UTMSit/gitupacrep/archive/refs/heads/main.zip
-DEPENDS="python"
+# Python 3 and the compiler are already in the LiveCD.  Declaring them here
+# would make upac rebuild their dependency chain on the minimal live system.
+DEPENDS=""
 
 # The installer is kept in this repository under core/comrun7-installer.  It
 # is not part of the LiveCD image; install this package from a booted LiveCD

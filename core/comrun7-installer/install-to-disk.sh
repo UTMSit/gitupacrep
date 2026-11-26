@@ -77,8 +77,19 @@ else
     INSTALL_CONF="$SCRIPT_DIR/install.conf.example"
 fi
 if [ -f "$INSTALL_CONF" ]; then
+    # The profile supplies defaults, but variables already in the environment
+    # must win. Save exported values before sourcing it, then restore them.
+    # Use a here-doc because /tmp is read-only on the live image.
+    SAVED_ENV="$(env 2>/dev/null || true)"
     # shellcheck disable=SC1090
     . "$INSTALL_CONF"
+    while IFS= read -r _envline; do
+        case "$_envline" in
+            INSTALL_*=*|COMRUN7_*=*) export "$_envline" ;;
+        esac
+    done <<EOF
+$SAVED_ENV
+EOF
 fi
 INSTALL_HOSTNAME="${INSTALL_HOSTNAME:-comrun7}"
 INSTALL_TIMEZONE="${INSTALL_TIMEZONE:-UTC}"
