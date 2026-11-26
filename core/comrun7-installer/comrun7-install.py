@@ -522,9 +522,12 @@ def install(stdscr, cfg):
         stdscr.refresh()
     rc = proc.wait()
 
-    frame(stdscr, "Install finished" if rc == 0 else "Install failed",
-          "Press any key to continue")
-    put(stdscr, 3, 3, "Backend exit status: %d" % rc)
+    if rc == 0:
+        frame(stdscr, "Install finished", "Press any key to exit")
+        put(stdscr, 3, 3, "Reboot, remove the live media, and boot from the disk.")
+    else:
+        frame(stdscr, "Install FAILED - read the messages", "Press any key to exit")
+        put(stdscr, 3, 3, "Backend exit status: %d (disk may be unusable)" % rc)
     for n, line in enumerate(log_lines[-max(1, curses.LINES - 7):]):
         put(stdscr, 5 + n, 3, line[:max(0, curses.COLS - 6)])
     stdscr.refresh()

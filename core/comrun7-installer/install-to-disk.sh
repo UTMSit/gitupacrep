@@ -375,21 +375,42 @@ COMRUN7_SERIAL_ENTRY="$INSTALL_SERIAL_ENTRY" \
     /boot/vmlinuz /boot/initrd.gz "$SEARCH_OPT" "$SEARCH_VALUE" "$FS_NAME"
 
 # Install both UEFI and legacy BIOS boot paths when the modules are available.
-# With --boot-directory=<ESP>, GRUB looks for <ESP>/grub/grub.cfg, not
-# <ESP>/boot/grub/grub.cfg.  Copy the config to every path a firmware may use.
+# A bootloader failure must NOT be a warning: reporting success with no boot
+# code on the disk is exactly how you get an installed system that will not
+# boot.  Fail loudly if nothing was written.
+BOOTLOADER_INSTALLED=0
 if [ -d /mnt/comrun7/usr/lib/grub/x86_64-efi ]; then
-    grub-install --target=x86_64-efi --recheck \
+    if grub-install --target=x86_64-efi --recheck \
         --efi-directory=/mnt/comrun7/boot/efi \
         --boot-directory=/mnt/comrun7/boot/efi \
-        --removable || echo "WARNING: UEFI grub-install failed" >&2
-    mkdir -p /mnt/comrun7/boot/efi/grub /mnt/comrun7/boot/efi/boot/grub
-    cp "$GRUB_CFG" /mnt/comrun7/boot/efi/grub/grub.cfg
-    cp "$GRUB_CFG" /mnt/comrun7/boot/efi/boot/grub/grub.cfg
+        --removable; then
+        BOOTLOADER_INSTALLED=1
+        # With --boot-directory=<ESP>, GRUB looks for <ESP>/grub/grub.cfg,
+        # not <ESP>/boot/grub/grub.cfg. Copy to every path firmware may use.
+        mkdir -p /mnt/comrun7/boot/efi/grub /mnt/comrun7/boot/efi/boot/grub
+        cp "$GRUB_CFG" /mnt/comrun7/boot/efi/grub/grub.cfg
+        cp "$GRUB_CFG" /mnt/comrun7/boot/efi/boot/grub/grub.cfg
+    else
+        echo "WARNING: UEFI grub-install failed" >&2
+    fi
 fi
-if [ "$INSTALL_BIOS_GRUB" = "1" ] && [ -d /mnt/comrun7/usr/lib/grub/i386-pc ]; then
-    grub-install --target=i386-pc --recheck \
+if [ "$INSTALL_BIOS_GRUB" = "1" ]; then
+    if [ ! -d /mnt/comrun7/usr/lib/grub/i386-pc ]; then
+        echo "ERROR: BIOS GRUB was requested but i386-pc modules are missing" >&2
+        exit 1
+    fi
+    if grub-install --target=i386-pc --recheck \
         --boot-directory=/mnt/comrun7/boot \
-        "$DEV" || echo "WARNING: BIOS grub-install failed" >&2
+        "$DEV"; then
+        BOOTLOADER_INSTALLED=1
+    else
+        echo "ERROR: BIOS grub-install failed on $DEV" >&2
+        exit 1
+    fi
+fi
+if [ "$BOOTLOADER_INSTALLED" != "1" ]; then
+    echo "ERROR: no bootloader was installed; the disk will not boot" >&2
+    exit 1
 fi
 
 sync
