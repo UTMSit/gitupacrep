@@ -531,7 +531,9 @@ def summary_screen(stdscr, cfg):
 # Main flow
 
 def main(stdscr):
-    curses.curs_set(1)
+    # The TUI draws its own cursor ("_" in forms, reverse video in menus).
+    # Hide the terminal cursor so only one cursor is visible.
+    curses.curs_set(0)
     stdscr.keypad(True)
     os.environ.setdefault("TERM", "xterm")
 
