@@ -1,0 +1,14 @@
+NAME="ncdu"
+VERSION="1.18"
+REVISION=1
+URL="https://deb.debian.org/debian/pool/main/n/ncdu/ncdu_${VERSION}.orig.tar.gz"
+DEPENDS="ncurses"
+
+build() {
+    ./configure --prefix=/usr --with-ncursesw
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

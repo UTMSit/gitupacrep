@@ -2,16 +2,28 @@ NAME="screen"
 VERSION="4.9.0"
 REVISION=1
 URL="https://ftp.gnu.org/gnu/screen/screen-${VERSION}.tar.gz"
-DEPENDS="ncurses"
+DEPENDS="ncurses autoconf automake"
 
 build() {
+    # The GNU release tarball ships configure.ac but no generated configure.
+    cd "$(find . -maxdepth 3 -name configure.ac -type f -printf '%h\n' | head -1)"
+    autoreconf -fi
+    # Old autoconf probes call select() without <sys/select.h>; GCC 15 would
+    # otherwise treat the implicit declaration as a hard error.
+    CFLAGS="-g -O2 -std=gnu89 -Wno-error=incompatible-pointer-types" \
     ./configure \
         --prefix=/usr \
         --sysconfdir=/etc \
         --with-curses=ncurses
+    # screen redeclares getenv() with an old-style prototype; stdlib.h wins.
+    sed -i '/^extern char \*getenv();$/d' socket.c
+    # Same old-style redeclaration for utmp functions; system headers and
+    # screen's own static xpututline() provide correct prototypes.
+    sed -i '/^extern struct utmp \*getutline(), \*pututline();$/d' utmp.c
     make -j${UPAC_JOBS:-4}
 }
 
 upac_install() {
+    # build() already left us in the real source directory.
     make DESTDIR="${1}" install
 }

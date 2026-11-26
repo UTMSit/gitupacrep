@@ -1,0 +1,18 @@
+NAME="net-tools"
+VERSION="2.10"
+REVISION=1
+URL="https://deb.debian.org/debian/pool/main/n/net-tools/net-tools_${VERSION}.orig.tar.xz"
+DEPENDS=""
+
+build() {
+    # Non-interactive configuration: accept config.in defaults, then disable
+    # hostname (owned by sfc/base) to avoid shadowing a basic command.
+    yes '' | bash ./configure.sh config.in >/dev/null
+    sed -i 's/^#define HAVE_HOSTNAME_TOOLS 1$/#define HAVE_HOSTNAME_TOOLS 0/' config.h
+    sed -i 's/^HAVE_HOSTNAME_TOOLS=1$/# HAVE_HOSTNAME_TOOLS=0/' config.make
+    CFLAGS="-g -O2 -Wall" make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    CFLAGS="-g -O2 -Wall" make DESTDIR="${1}" install
+}

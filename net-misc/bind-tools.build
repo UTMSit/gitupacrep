@@ -1,0 +1,35 @@
+NAME="bind-tools"
+VERSION="9.20.11"
+REVISION=1
+URL="https://downloads.isc.org/isc/bind9/${VERSION}/bind-${VERSION}.tar.xz"
+DEPENDS="liburcu"
+
+build() {
+    DEPS=/usr
+    if [ ! -e /usr/lib/liburcu.so ] && [ -d /tmp/upac-staging-0/liburcu-0.15.7/usr ]; then
+        DEPS="$PWD/.upac-deps"
+        mkdir -p "$DEPS/lib/pkgconfig" "$DEPS/include"
+        cp -a /tmp/upac-staging-0/liburcu-0.15.7/usr/. "$DEPS"/
+        # liburcu's generated .pc/.la files point at /usr; redirect them to
+        # the staged prefix so pkg-config and libtool can find the libraries.
+        sed -i \
+            -e "s|^libdir=/usr/lib|libdir=$DEPS/lib|" \
+            -e "s|^prefix=/usr|prefix=$DEPS|" \
+            "$DEPS"/lib/pkgconfig/*.pc
+        sed -i \
+            -e "s|libdir='/usr/lib'|libdir='$DEPS/lib'|" \
+            -e "s|/usr/lib/liburcu-common.la|$DEPS/lib/liburcu-common.la|g" \
+            "$DEPS"/lib/*.la
+    fi
+    export PKG_CONFIG_PATH="$DEPS/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
+    export CPPFLAGS="-I$DEPS/include"
+    export LDFLAGS="-L$DEPS/lib -Wl,-rpath,/usr/lib"
+    ./configure --prefix=/usr --sysconfdir=/etc/bind \
+        --disable-doh --disable-geoip --with-libxml2=no \
+        --with-readline=no --without-gssapi --with-json-c=no
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

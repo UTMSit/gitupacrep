@@ -1,0 +1,41 @@
+# comrun7 installer defaults.
+#
+# install-comrun7 sources /etc/comrun7/install.conf, then lets environment
+# variables override any value here.  Example:
+#
+#   COMRUN7_INSTALL_CONF=/usr/share/comrun7/install-profiles/custom.conf
+#   INSTALL_USER_NAME=alex INSTALL_HOSTNAME=t420 install-comrun7 /dev/sda
+
+# Host identity
+INSTALL_HOSTNAME="comrun7"
+INSTALL_TIMEZONE="UTC"
+INSTALL_KEYMAP="us"
+INSTALL_LOCALE="C.UTF-8"
+
+# User account. Set INSTALL_USER_NAME="" to skip creating a user.
+INSTALL_USER_NAME="user"
+INSTALL_USER_GECOS="comrun7 user"
+INSTALL_USER_HOME="/home/user"
+INSTALL_USER_SHELL="/bin/sh"
+INSTALL_USER_GROUPS="wheel netdev"
+INSTALL_CREATE_HOME=1
+INSTALL_HOME_MODE="0755"
+
+# Passwords. Leave hashes empty to be prompted during installation.
+# Plaintext values are only for automated installs and are hashed immediately.
+# Root password modes: lock, prompt, hash, same-as-user.
+INSTALL_ROOT_PASSWORD_MODE="same-as-user"
+INSTALL_ROOT_PASSWORD_HASH=""
+INSTALL_ROOT_PASSWORD=""
+INSTALL_USER_PASSWORD_HASH=""
+INSTALL_USER_PASSWORD=""
+
+# Optional numeric ids; empty means auto-allocate from 1000.
+INSTALL_USER_UID=""
+INSTALL_USER_GID=""
+
+# Filesystem layout produced by install-comrun7.
+INSTALL_EFI_SIZE_MB="512"
+INSTALL_BIOS_GRUB=1
+INSTALL_SWAP_SIZE_MB="0"
+INSTALL_SERIAL_ENTRY=0

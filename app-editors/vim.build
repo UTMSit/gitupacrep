@@ -1,14 +1,15 @@
 NAME="vim"
-VERSION="latest"
+VERSION="9.1.1800"
 REVISION=1
 URL="https://github.com/vim/vim/archive/v${VERSION}.tar.gz"
 DEPENDS="ncurses"
 
 build() {
-    ./configure --prefix=/usr --with-features=huge --enable-python3interp
-    make -j $UPAC_JOBS
+    ./configure --prefix=/usr --with-features=huge --enable-gui=no \
+        --without-x --disable-python3interp --enable-multibyte
+    make -j${UPAC_JOBS:-4}
 }
 
 upac_install() {
-    DESTDIR="$1" make install
+    make DESTDIR="${1}" install
 }

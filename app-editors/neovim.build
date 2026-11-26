@@ -1,13 +1,19 @@
 NAME="neovim"
-VERSION="latest"
+VERSION="0.12.6"
 REVISION=1
-URL="https://github.com/neovim/neovim/archive/v${VERSION}.tar.gz"
-DEPENDS="libuv libvterm"
+URL="https://github.com/neovim/neovim/archive/refs/tags/v${VERSION}.tar.gz"
+DEPENDS=""
 
 build() {
-    make CMAKE_BUILD_TYPE=Release -j $UPAC_JOBS
+    # upac exports DESTDIR for the install phase, but Neovim's bundled
+    # ExternalProject dependencies also honour it while building, which puts
+    # LuaJIT headers under the wrong prefix. Clear it for the build only.
+    UPAC_DESTDIR="${DESTDIR:-}"
+    unset DESTDIR
+    make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=/usr USE_BUNDLED=ON \
+        -j${UPAC_JOBS:-4}
 }
 
 upac_install() {
-    DESTDIR="$1" make install
+    DESTDIR="${1:-$UPAC_DESTDIR}" make CMAKE_INSTALL_PREFIX=/usr install
 }

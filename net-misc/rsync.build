@@ -1,11 +1,18 @@
 NAME="rsync"
 VERSION="3.3.0"
 REVISION=1
-URL="https://download.samba.org/pub/rsync/src/rsync-${VERSION}.tar.gz"
+URL="https://github.com/RsyncProject/rsync/archive/refs/tags/v${VERSION}.tar.gz"
 DEPENDS="zlib openssl"
 
 build() {
-    ./configure --prefix=/usr --with-included-popt=no
+    # The GitHub source archive has no pre-generated man pages; skip md2man.
+    CFLAGS="-g -O2 -Wno-error=incompatible-pointer-types" \
+        ./configure --prefix=/usr --disable-md2man
+    # On modern glibc <unistd.h> already declares lseek64 with three
+    # arguments; rsync's fallback prototype conflicts with it.
+    sed -i '/^[[:space:]]*\(OFF_T\|off64_t\) lseek64();$/d' syscall.c
+    # Give the pool_alloc bomb callback its real three-argument prototype.
+    sed -i 's|void[[:space:]]*(\*bomb)();|void (*bomb)(const char *, const char *, int);|' lib/pool_alloc.c
     make -j${UPAC_JOBS:-4}
 }
 

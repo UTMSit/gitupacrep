@@ -1,10 +1,13 @@
 NAME="socat"
 VERSION="1.7.4.4"
 REVISION=1
-URL="http://www.dest-unreach.org/socat/download/socat-${VERSION}.tar.gz"
+URL="https://deb.debian.org/debian/pool/main/s/socat/socat_${VERSION}.orig.tar.gz"
 DEPENDS="openssl zlib"
 
 build() {
+    # GCC 15 treats strchr(const char *, ...) as const-qualified; socat 1.7.4.4
+    # writes through that pointer in filan.c. Cast at the single call site.
+    sed -i "s|\*strchr(s, '\\\\n') = '\\\\0';|*strchr((char *)s, '\\\\n') = '\\\\0';|" filan.c
     ./configure --prefix=/usr
     make -j${UPAC_JOBS:-4}
 }

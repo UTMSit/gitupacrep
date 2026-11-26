@@ -1,0 +1,19 @@
+NAME="nmap"
+VERSION="7.95"
+REVISION=1
+URL="https://nmap.org/dist/nmap-${VERSION}.tar.bz2"
+DEPENDS=""
+
+build() {
+    # Use the bundled Lua/PCRE/libpcap copies so the build is self-contained.
+    ./configure --prefix=/usr --without-zenmap --without-ndiff \
+        --with-libpcap=included --with-libpcre=included --with-liblua=included
+    # The bundled PCRE tarball has an aclocal.m4 older than configure.ac;
+    # its Makefile otherwise tries to regenerate it with missing aclocal-1.16.
+    touch libpcre/aclocal.m4 libpcre/configure libpcre/Makefile.in
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

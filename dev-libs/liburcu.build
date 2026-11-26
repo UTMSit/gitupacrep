@@ -1,0 +1,17 @@
+NAME="liburcu"
+VERSION="0.15.7"
+REVISION=1
+URL="https://deb.debian.org/debian/pool/main/libu/liburcu/liburcu_${VERSION}.orig.tar.bz2"
+DEPENDS=""
+
+build() {
+    # Upstream tarball unpacks to userspace-rcu-<version>/.
+    cd "$(find . -maxdepth 2 -name configure -type f -printf '%h\n' | head -1)"
+    ./configure --prefix=/usr --libdir=/usr/lib --enable-shared --disable-static
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    while [ ! -f Makefile ] && [ "$PWD" != "/" ]; do cd ..; done
+    make DESTDIR="${1}" install
+}

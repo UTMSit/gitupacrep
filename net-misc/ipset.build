@@ -1,0 +1,28 @@
+NAME="ipset"
+VERSION="7.19"
+REVISION=1
+URL="https://ipset.netfilter.org/ipset-${VERSION}.tar.bz2"
+DEPENDS="libmnl"
+
+build() {
+    DEPS=/usr
+    if [ -d /tmp/upac-staging-0/libmnl-1.0.5/usr ]; then
+        DEPS="$PWD/.upac-deps"
+        mkdir -p "$DEPS/lib/pkgconfig" "$DEPS/include"
+        cp -a /tmp/upac-staging-0/libmnl-1.0.5/usr/. "$DEPS"/
+        sed -i \
+            -e "s|^prefix=/usr|prefix=$DEPS|" \
+            -e "s|^libdir=/usr/lib|libdir=$DEPS/lib|" \
+            "$DEPS"/lib/pkgconfig/*.pc
+        sed -i "s|libdir='/usr/lib'|libdir='$DEPS/lib'|" "$DEPS"/lib/*.la
+        export PKG_CONFIG_PATH="$DEPS/lib/pkgconfig"
+        export CPPFLAGS="-I$DEPS/include"
+        export LDFLAGS="-L$DEPS/lib -Wl,-rpath,/usr/lib"
+    fi
+    ./configure --prefix=/usr --with-kmod=no
+    make -j${UPAC_JOBS:-4}
+}
+
+upac_install() {
+    make DESTDIR="${1}" install
+}

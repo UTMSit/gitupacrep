@@ -11,5 +11,5 @@ build() {
 upac_install() {
     mkdir -p "${1}/usr/bin" "${1}/usr/share/man/man1"
     install -m 755 tree "${1}/usr/bin/tree"
-    install -m 644 tree.1 "${1}/usr/share/man/man1/tree.1"
+    install -m 644 doc/tree.1 "${1}/usr/share/man/man1/tree.1"
 }
