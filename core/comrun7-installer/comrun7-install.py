@@ -66,13 +66,51 @@ def run(cmd, input_text=None, check=True):
 
 
 def hash_password(password):
-    if not HASHER or not os.path.exists(HASHER):
-        raise RuntimeError("password hasher is missing: " + HASHER)
-    result = run([HASHER], input_text=password + "\n")
-    value = result.stdout.strip()
-    if not value.startswith("$6$"):
-        raise RuntimeError("unexpected password hash from " + HASHER)
-    return value
+    """Hash through the bundled helper, with libcrypt as a safety net.
+
+    A broken or missing helper must not stop the install before it even
+    starts, and no plaintext password is ever put on a command line.
+    """
+    if HASHER and os.path.exists(HASHER):
+        try:
+            result = run([HASHER], input_text=password + "\n")
+            value = result.stdout.strip()
+            if value.startswith("$6$"):
+                return value
+            detail = "unexpected output from " + HASHER
+        except Exception as exc:
+            detail = str(exc)
+    else:
+        detail = "password hasher is missing: " + str(HASHER)
+
+    # Fallback: call libcrypt directly through ctypes (same SHA-512 crypt).
+    try:
+        import ctypes
+        names = ("libcrypt.so.2", "libcrypt.so.1", "libcrypt.so")
+        lib = None
+        for name in names:
+            try:
+                lib = ctypes.CDLL(name)
+                break
+            except OSError:
+                continue
+        if lib is None:
+            raise RuntimeError("libcrypt is not available")
+        lib.crypt.argtypes = (ctypes.c_char_p, ctypes.c_char_p)
+        lib.crypt.restype = ctypes.c_char_p
+        alphabet = ("./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    "abcdefghijklmnopqrstuvwxyz")
+        salt = "$6$" + "".join(
+            alphabet[b % len(alphabet)] for b in os.urandom(16))
+        value = lib.crypt(password.encode("utf-8"), salt.encode("ascii"))
+        if not value:
+            raise RuntimeError("crypt() returned no hash")
+        value = value.decode("ascii")
+        if not value.startswith("$6$"):
+            raise RuntimeError("crypt() did not produce a SHA-512 hash")
+        return value
+    except Exception as exc:
+        raise RuntimeError("password hashing failed (%s); %s" % (detail, exc))
 
 
 def list_disks():
